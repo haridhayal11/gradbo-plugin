@@ -83,7 +83,7 @@ applications/YYYY-MM-DD_employer_role/
   cover-letter.tex | cover-letter.txt + cover-letter.docx, and their PDF when built   when one is sent
   application-notes.md    the form as you work through it: fields, answers, open questions, where you stopped
   manual-handoff.md       only when a human has to take over (templates/manual-handoff.md)
-  receipt.md receipt.json the exact submission (templates/receipt.md)
+  receipt.md receipt.json the exact submission (templates/receipt.md, templates/receipt.json)
 ```
 
 Older folders may hold other files, such as `cover-letter.md`, `document-checks.json` or `page-1.png`; leave them as they are.

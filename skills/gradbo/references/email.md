@@ -25,7 +25,7 @@ During setup, ask once which they want. Never ask for or store their mail passwo
 
 Run this when the candidate asks "any news?", and as part of [organise.md](organise.md).
 
-1. Collect the submitted roles: `list_jobs(status="Submitted")` and `list_jobs(status="Assessment completed")`, with their employers and the domains from each `job.md` and receipt.
+1. Collect the roles with an application in flight: `list_jobs(status=...)` for `Submitted`, `Assessment completed` and `Interview`, with their employers and the domains from each `job.md` and receipt. Each call returns a page (`items`, `total`); if `total` is more than you got, call again with `offset`.
 2. Look at mail since the last check (the date is in `applications/mail-check.md`; 14 days on the first run):
    - connector: search mail from those employers' domains and from applicant tracking systems;
    - IMAP: `python <skill>/scripts/mail.py scan --days <n> --domains <employer domains, comma-separated>`.
@@ -35,11 +35,12 @@ Run this when the candidate asks "any news?", and as part of [organise.md](organ
 |---|---|
 | A confirmation of an application | If the role isn't Submitted, follow "Applications the candidate sent themselves" in [organise.md](organise.md). Otherwise nothing. |
 | A rejection | `update_status(job_id, "Rejected", reason="Rejection email <date>")` |
-| An invitation to an assessment, test or interview | Tell the candidate, with the deadline or the booking link. Add a note: `add_note(job_id, "Assessment invite <date>")`. Once they have done it, `update_status(job_id, "Assessment completed")`. |
+| An invitation to an online test or assessment | Tell the candidate, with the deadline or the link. Add a note: `add_note(job_id, "Assessment invite <date>")`. Once they have done it, `update_status(job_id, "Assessment completed")`. |
+| An invitation to an interview or assessment centre | Tell the candidate, with the date or the booking link. `update_status(job_id, "Interview", reason="Interview invite <date>")`. |
 | An offer | `update_status(job_id, "Offer", reason="Offer email <date>")`, and tell the candidate at once |
 | "Under review", a newsletter, anything else | Nothing |
 
-4. Add one dated line per message under **Afterwards** in that role's `receipt.md`, such as "2026-11-02: rejection email". Copy no more of the message than that.
+4. Add one dated line per message under **Afterwards** in that role's `receipt.md`, such as "2026-11-02: rejection email", and the same entry to `afterwards` in its `receipt.json` when it has one. Copy no more of the message than that.
 5. Write today's date to `applications/mail-check.md`, then give the candidate the summary: offers first, then invitations with their deadlines, then rejections.
 
 Notes and reasons sent to Gradbo name the kind of message and the date only (SKILL.md rule 6).

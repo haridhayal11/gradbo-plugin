@@ -4,8 +4,8 @@ When the candidate asks you to apply, prepare everything and submit; they don't 
 
 ## 1. Check the role
 
-1. `get_job(job_id)` (or `add_job_by_url` first for a role Gradbo doesn't have). Stop if the status is Submitted, Rejected, Offer or Closed, or the closing date has passed.
-2. Open the official advert on the employer's own site (`apply_url` or `canonical_url`) and confirm it is live. If it has gone, `update_status(job_id, "Excluded", reason="Advert no longer live on <date>")` and tell the candidate.
+1. `get_job(job_id)` (or `add_job_by_url` first for a role Gradbo doesn't have). Stop if the role is already applied to or finished (Submitted, Assessment completed, Interview, Offer, Rejected, Withdrawn or Closed), or the closing date has passed. If it was shortlisted a while ago, `get_job_snapshots(job_id)` shows whether the advert has changed since.
+2. Open the official advert on the employer's own site (`apply_url` or `canonical_url`) and confirm it is live. If it has gone, `update_status(job_id, "Closed", reason="Advert no longer live on <date>")` and tell the candidate.
 3. Check eligibility yourself against the advert and `profile/facts.md`:
    - Clearance or vetting required: don't apply (SKILL.md rule 9).
    - Sponsorship: if the candidate needs it and the advert refuses it, don't apply. If the advert says nothing, apply and record that sponsorship support is unconfirmed.
@@ -43,7 +43,7 @@ Before the final submit, go back over every page: all required fields are filled
 
 1. Submit once. Wait for the employer's confirmation page or message and capture its text, any reference number and the URL.
 2. If you can't tell whether it went through (an error after submitting, a timeout, a blank page), don't submit again. Check the employer's candidate portal, or ask the candidate to check their email. Retry only when it is clear nothing was received.
-3. Write `receipt.md` from [templates/receipt.md](../templates/receipt.md), with every submitted answer exactly as entered, and `receipt.json` with the same content as data.
+3. Write `receipt.md` from [templates/receipt.md](../templates/receipt.md), with every submitted answer exactly as entered, and `receipt.json` from [templates/receipt.json](../templates/receipt.json) with the same content as data. Use `null` for anything unknown and keep `"schema"` as it is.
 4. `record_submission(job_id, application_dir="applications/<folder>", confirmation="<reference or the confirmation's first line>")`. Keep the confirmation impersonal (SKILL.md rule 6).
 5. File any new reusable answers under `answers/` ([organise.md](organise.md)).
 6. Tell the candidate it is done: role, employer, confirmation and folder.

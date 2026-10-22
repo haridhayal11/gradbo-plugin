@@ -47,7 +47,7 @@ def version(command: list[str]) -> str | None:
 
 
 def chromium_browser() -> str | None:
-    """Chrome or Edge, which the Playwright Extension needs."""
+    """Chrome or Edge, where the agent's browser extension runs."""
     if SYSTEM == "macos":
         for app in ("Google Chrome", "Microsoft Edge", "Chromium", "Brave Browser"):
             if Path(f"/Applications/{app}.app").exists() or (Path.home() / f"Applications/{app}.app").exists():
@@ -137,7 +137,7 @@ def check(mail: bool) -> list[dict]:
     node = shutil.which("node")
     node_version = version([node, "--version"]) if node else None
     major = int(node_version.lstrip("v").split(".")[0]) if node_version and node_version.lstrip("v")[:1].isdigit() else 0
-    add("Node 18+ (for Playwright MCP, the usual browser tool, and `npx skills`)", major >= 18, "recommended",
+    add("Node 18+ (for `npx skills`, and the Playwright fallback browser)", major >= 18, "recommended",
         node_version or "not found", "node")
     browser = chromium_browser()
     add("Chrome or Edge (the agent applies in your own browser)", bool(browser), "recommended",

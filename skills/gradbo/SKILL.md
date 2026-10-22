@@ -41,7 +41,7 @@ If `profile/facts.md` does not exist yet, run setup first, whatever was asked. S
 7. **Email is read only.** Read the candidate's mail only for verification codes and employers' replies ([references/email.md](references/email.md)); never send, delete or mark messages.
 8. **No credentials in the workspace.** You apply in the candidate's own browser ([references/install.md](references/install.md), step 4). Employer passwords live in its password manager, and the candidate accepts or types them; you never read or type one. Never write passwords, one-time codes, cookies or identity documents to any file, note or tool call.
 9. **Exclude clearance and vetting roles.** If an advert requires security clearance or vetting, don't apply; set the role to Excluded with the reason. When sponsorship or eligibility is unclear, record what the advert says rather than guessing.
-10. **Status changes go through the tools.** Use `update_status` and `record_submission`; an illegal transition is refused, so follow the legal path (Shortlisted → Materials prepared → Submitted) rather than forcing it.
+10. **Status changes go through the tools.** Use `update_status` and `record_submission`; an illegal transition is refused, so follow the legal path (Shortlisted → Materials prepared → Submitted) rather than forcing it. A role whose advert has gone is Closed; after submitting, a role moves to Assessment completed, Interview, Offer, Rejected or Withdrawn (`get_criteria()` lists every legal move).
 11. **Every submission has a receipt.** Before calling `record_submission`, make sure the role has its folder under `applications/` with `job.md` and `receipt.md`, and pass that folder. This includes applications the candidate sent themselves ([references/organise.md](references/organise.md)).
 12. **Stop at protections.** On a CAPTCHA, anti-bot block or an access check you cannot pass with direct page controls, stop retrying. Write `manual-handoff.md` and hand over to the candidate. Never try to defeat the protection.
 
@@ -51,14 +51,18 @@ If `profile/facts.md` does not exist yet, run setup first, whatever was asked. S
 |---|---|
 | `get_digest(unjudged_only=True)` | New eligible roles not yet judged, best keyword match first |
 | `get_job(job_id)` | One role: advert text, eligibility verdict and reasons, closing date, status, notes, links |
-| `list_jobs(status=..., q=...)`, `search_jobs(q)` | Look roles up, e.g. everything Submitted |
+| `list_jobs(status=..., q=..., closes_before=..., offset=...)`, `search_jobs(q)` | Look roles up, e.g. everything Submitted. `list_jobs` returns a page: `items` and `total` |
 | `override_fit(job_id, fit_score, fit_rationale)` | Record your 0-10 judgement; it replaces the keyword score |
 | `update_status(job_id, status, reason)` | Move a role along the legal transitions |
+| `bulk_update_status(job_ids, status, reason)` | Move up to 100 roles at once, e.g. after triage; reports which moves were refused |
+| `get_job_history(job_id)` | When the role's status changed, by whom and why |
+| `get_job_snapshots(job_id)` | How the advert has changed since the crawl first saw it (a moved deadline, new wording) |
 | `add_note(job_id, note)` | Append a dated, impersonal note |
 | `set_application_dir(job_id, application_dir)` | Link a role to its workspace folder |
 | `record_submission(job_id, application_dir, confirmation, note)` | After the employer confirms receipt: moves the role to Submitted and notes the confirmation |
 | `add_job_by_url(url, ...)` | Add a role the crawl has not found, from the employer's advert link |
 | `get_preferences()`, `set_preferences(preferences)` | The coarse search filter the server applies |
 | `get_criteria()` | The eligibility rules and legal status transitions |
+| `export_tracker()` | The whole tracker as CSV, for the candidate's own records |
 
 If the gradbo tools are missing or refuse the token, follow [references/install.md](references/install.md), step 1.
