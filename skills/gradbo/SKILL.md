@@ -21,7 +21,7 @@ You apply with whatever browser tool this harness gives you, for example Playwri
 | Apply to a role (prepare, fill in, submit) | [references/apply.md](references/apply.md), then [questions.md](references/questions.md), [consents.md](references/consents.md) and [documents.md](references/documents.md) as the form needs them |
 | Check email for replies, record an application they sent themselves, report an outcome, tidy the workspace, or check the tracker | [references/organise.md](references/organise.md), [references/email.md](references/email.md) |
 
-If `profile/facts.md` does not exist yet, run setup first, whatever was asked.
+If `profile/facts.md` does not exist yet, run setup first, whatever was asked. Setup starts with a preflight ([references/install.md](references/install.md)) that checks the Gradbo connection, this machine, the browser tool and mail.
 
 ## Rules that always apply
 
@@ -57,4 +57,4 @@ If `profile/facts.md` does not exist yet, run setup first, whatever was asked.
 | `get_preferences()`, `set_preferences(preferences)` | The coarse search filter the server applies |
 | `get_criteria()` | The eligibility rules and legal status transitions |
 
-If the tools are missing, the plugin's MCP connection is not set up. Ask the candidate to set `GRADBO_TOKEN` (and `GRADBO_URL` if they use their own server) to a token from Settings › Connect your agent, then restart the session.
+If the gradbo tools are missing or refuse the token, follow [references/install.md](references/install.md), step 1.

@@ -7,9 +7,17 @@ Find UK early-careers roles with [Gradbo](https://gradbo.com) and apply with you
 
 Your CV, answers and email never pass through Gradbo.
 
+## Quick start
+
+1. Sign up at [app.gradbo.com](https://app.gradbo.com). New accounts are approved by an administrator; you can get your agent ready while you wait.
+2. Once approved, the dashboard's **Connect your agent** step (also under **Settings**) asks which agent you use, creates your token and shows the exact commands for it with the token filled in. It tells you when your agent has connected.
+3. Start your agent in a new, empty folder for your job search and say: **"Set up my Gradbo profile. My CV is at <path>."** It first checks your computer and lists anything missing, with install commands for your system, then reads your CV.
+
+The rest of this page is the same setup by hand.
+
 ## 1. Get a token
 
-In the Gradbo dashboard, open **Settings › Connect your agent**, create a token with `read` and `write`, and add it to your shell profile (`~/.zshrc`, `~/.bashrc`, or Windows' user environment variables):
+In the dashboard, open **Settings › Connect your agent** and create a token with `read` and `write`. Claude Code stores it for you (below). For other agents, keep it in your shell profile (`~/.zshrc` or `~/.bashrc`; on Windows, `setx GRADBO_TOKEN <token>`):
 
 ```sh
 export GRADBO_TOKEN=jr_pat_...
@@ -21,10 +29,11 @@ export GRADBO_TOKEN=jr_pat_...
 
 ```sh
 claude plugin marketplace add haridhayal11/gradbo-plugin
-claude plugin install gradbo@gradbo
+claude plugin install gradbo@gradbo --config token=<your token>
+claude mcp add playwright -- npx @playwright/mcp@latest
 ```
 
-The plugin brings both the skill and the connection.
+The plugin brings the skill and the connection, and Claude Code keeps the token in its credential store. To change it later, run `claude plugin configure gradbo@gradbo`. For your own Gradbo server, add `--config server=https://your.server`. The third line adds the browser the skill applies with.
 
 ### Any other agent: the skill
 
@@ -81,6 +90,8 @@ Gemini CLI documents `$VAR` expansion in settings but doesn't say it applies to 
 
 ## 3. What the skill needs on your machine
 
+The skill checks all of this itself at the start of setup (`scripts/doctor.py`, which needs only Python) and tells you what's missing, with the install command for your system.
+
 | For | Install | Without it |
 |---|---|---|
 | Applying | A browser tool in your agent, e.g. [Playwright MCP](https://github.com/microsoft/playwright-mcp) | The skill prepares everything and you submit the form yourself |
@@ -96,9 +107,9 @@ Open your agent in an empty folder for your job search and ask it to set up your
 ## Contents
 
 - `skills/gradbo/SKILL.md`: the router and the rules every task follows.
-- `skills/gradbo/references/`: setup, find, apply, questions, consents, documents, email, organise, folder layout, question keys, and the writing guide (`humanizer.md`, bundled from [humanizer](https://github.com/blader/humanizer) under its MIT licence).
+- `skills/gradbo/references/`: install (preflight), setup, find, apply, questions, consents, documents, email, organise, folder layout, question keys, and the writing guide (`humanizer.md`, bundled from [humanizer](https://github.com/blader/humanizer) under its MIT licence).
 - `skills/gradbo/templates/`: the files the skill writes (job, receipt, facts, handoff, cover letter).
-- `skills/gradbo/scripts/`: `docs.py` (documents) and `mail.py` (read-only IMAP).
+- `skills/gradbo/scripts/`: `doctor.py` (checks your computer), `docs.py` (documents) and `mail.py` (read-only IMAP).
 - `.claude-plugin/` and `.mcp.json`: the Claude Code plugin packaging.
 
 This repository is published from `gradbo/agent` in the Gradbo source tree; changes are made there.

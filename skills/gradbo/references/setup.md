@@ -2,6 +2,10 @@
 
 The goal is a `profile/` the rest of the skill can trust, plus search preferences on the server. Ask only for what the evidence cannot give.
 
+## 0. Preflight
+
+Run [install.md](install.md) first: check the Gradbo connection, this machine (`scripts/doctor.py`), the browser tool and mail, and give the candidate one checklist. A missing optional item never blocks setup; a missing Gradbo connection does.
+
 ## 1. The workspace
 
 - Confirm the workspace folder with the candidate if you are not sure the current directory is meant for it.
@@ -40,6 +44,6 @@ The server filters and keyword-scores adverts with these; they decide what reach
 2. Propose values from the profile: up to six role families in the candidate's order of preference, seniority (`internship`, `graduate`, `junior`, …), `graduation_year` for graduate schemes, `available_from` (YYYY-MM), preferred locations, `needs_sponsorship`, keywords, and employers to favour or hide. Keep `exclude_clearance` true.
 3. Show the proposal and save it with `set_preferences` once the candidate agrees. Only send fields they confirmed; these are search settings, not personal facts.
 
-## 6. Check the connection
+## 6. First roles
 
-Call `get_digest(limit=5)`. If it fails with an authentication error, the token is missing or read-only; see the end of SKILL.md.
+Call `get_digest(limit=5)` and tell the candidate setup is done: what is in their profile, what is still missing, and how many new roles are waiting. Offer to triage them now ([find.md](find.md)).

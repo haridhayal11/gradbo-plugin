@@ -1,10 +1,25 @@
 {
   "name": "gradbo",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Find early-careers roles with Gradbo, keep your profile, answers and applications in a local workspace, and apply with your own browser agent while Gradbo tracks what you sent.",
   "author": {
     "name": "Gradbo"
   },
   "homepage": "https://gradbo.com",
-  "repository": "https://github.com/haridhayal11/gradbo-plugin"
+  "repository": "https://github.com/haridhayal11/gradbo-plugin",
+  "userConfig": {
+    "token": {
+      "type": "string",
+      "title": "Gradbo token",
+      "description": "A token with read and write, from Settings \u203a Connect your agent in the Gradbo dashboard. Stored securely by Claude Code.",
+      "sensitive": true,
+      "required": true
+    },
+    "server": {
+      "type": "string",
+      "title": "Gradbo server",
+      "description": "Leave as it is unless you run your own Gradbo server.",
+      "default": "https://app.gradbo.com"
+    }
+  }
 }

@@ -1,9 +1,9 @@
 {
   "gradbo": {
     "type": "http",
-    "url": "${GRADBO_URL:-https://app.gradbo.com}/mcp/",
+    "url": "${user_config.server}/mcp/",
     "headers": {
-      "Authorization": "Bearer ${GRADBO_TOKEN}"
+      "Authorization": "Bearer ${user_config.token}"
     }
   }
 }
