@@ -4,7 +4,7 @@ The candidate has asked you to apply, which means accepting what the application
 
 | What the form shows | Do |
 |---|---|
-| Privacy policy, terms and conditions, data processing for this application | Accept |
+| Privacy policy, terms and conditions, data processing for this application (including consent to process equality-monitoring answers) | Accept |
 | "The information I have given is accurate and complete" | Accept |
 | Any other consent the form **requires** to apply: background checks, references, data retention, a required talent pool | Accept |
 | Optional consents: future roles, talent community, sharing with partners | Leave unticked |
