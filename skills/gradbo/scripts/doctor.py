@@ -55,6 +55,44 @@ def word_installed() -> bool:
     return False
 
 
+def humanizer_path() -> Path | None:
+    """The humanizer skill, wherever an agent installs it: this folder, the user's skill folders,
+    or Claude Code's plugin cache."""
+    home, here = Path.home(), Path.cwd()
+    claude = Path(os.environ.get("CLAUDE_CONFIG_DIR") or home / ".claude")
+    candidates = [here / ".agents/skills/humanizer", here / ".claude/skills/humanizer", here / ".gemini/skills/humanizer",
+                  here / ".opencode/skills/humanizer", here / ".cursor/skills/humanizer", here / ".github/skills/humanizer",
+                  home / ".agents/skills/humanizer", claude / "skills/humanizer", home / ".gemini/skills/humanizer",
+                  home / ".cursor/skills/humanizer", home / ".copilot/skills/humanizer", home / ".config/opencode/skills/humanizer"]
+    for folder in candidates:
+        if (folder / "SKILL.md").is_file():
+            return folder / "SKILL.md"
+    cache = claude / "plugins" / "cache"
+    if cache.is_dir():
+        for skill in cache.glob("*/humanizer/**/SKILL.md"):
+            return skill
+    return None
+
+
+def gradbo_folder() -> tuple[bool, str]:
+    here = Path.cwd()
+    agents = here / "AGENTS.md"
+    if agents.is_file() and "Gradbo" in agents.read_text(encoding="utf-8", errors="ignore"):
+        return True, str(here)
+    if (here / "profile" / "facts.md").is_file():
+        return True, f"{here} (no AGENTS.md yet)"
+    if any((here / d / "skills" / "gradbo" / "SKILL.md").is_file() for d in (".agents", ".claude", ".gemini", ".cursor", ".github", ".opencode")):
+        return True, f"{here} (skills installed, no profile yet)"
+    default = Path.home() / "Gradbo"
+    # Agent configuration and version control don't make a folder "used".
+    config = {".agents", ".claude", ".gemini", ".cursor", ".github", ".opencode", ".codex", ".vscode", ".git",
+              ".mcp.json", "opencode.json", "skills-lock.json", ".DS_Store"}
+    if here.name.lower() == "gradbo" or all(p.name in config for p in here.iterdir()):
+        return True, f"{here} (new)"
+    hint = f"{default} exists: restart the agent there" if default.is_dir() else f"create {default} and start the agent there"
+    return False, f"{here} is not a Gradbo folder; {hint}"
+
+
 def check(mail: bool) -> list[dict]:
     items = []
 
@@ -62,6 +100,12 @@ def check(mail: bool) -> list[dict]:
         items.append({"name": name, "ok": ok, "need": need, "detail": detail,
                       "fix": None if ok else (fix or (FIX[fix_key][SYSTEM] if fix_key else None))})
 
+    ok, where = gradbo_folder()
+    add("Gradbo folder (start the agent here)", ok, "required", where, fix=None if ok else "see references/setup.md step 1")
+    skill = humanizer_path()
+    add("humanizer skill", bool(skill), "required", str(skill) if skill else "not found",
+        fix="see references/install.md step 3 (Claude Code: claude plugin install humanizer@gradbo --scope project; "
+            "others: npx skills add blader/humanizer -a <agent> -y)")
     py = sys.version_info
     add("Python 3.10+", py >= (3, 10), "recommended", f"{platform.python_version()} at {sys.executable}", "python")
     uv = shutil.which("uv")
@@ -110,12 +154,15 @@ def main(argv: list[str]) -> int:
         return 0
     print(f"System: {platform.system()} {platform.release()} ({SYSTEM})\n")
     for item in items:
-        mark = "ok " if item["ok"] else ("-- " if item["need"] == "optional" else "!! ")
+        mark = "ok " if item["ok"] else {"optional": "-- ", "recommended": "!! "}.get(item["need"], "XX ")
         print(f"{mark} {item['name']}: {item['detail']}")
         if item["fix"]:
             print(f"      install: {item['fix']}")
+    required = [i["name"] for i in items if not i["ok"] and i["need"] == "required"]
     missing = [i["name"] for i in items if not i["ok"] and i["need"] == "recommended"]
-    print("\nReady." if not missing else f"\nRecommended but missing: {', '.join(missing)}")
+    if required:
+        print(f"\nRequired and missing: {', '.join(required)}")
+    print("\nReady." if not (required or missing) else f"Recommended but missing: {', '.join(missing)}" if missing else "")
     return 0
 
 

@@ -27,11 +27,23 @@ Run `python <skill>/scripts/doctor.py` (`py` on Windows if `python` isn't found)
 
 If Python itself is missing, `doctor.py` can't run. Ask the candidate to install uv (it brings Python), using the commands in step 2 of the plugin README or https://docs.astral.sh/uv/.
 
-## 3. Browser tool (strongly recommended)
+## 3. Humanizer skill (required)
+
+Every piece of prose the skill writes goes through the `humanizer` skill ([blader/humanizer](https://github.com/blader/humanizer), MIT). Check that it is available: it's in your skill list, or `doctor.py` reports where it found its `SKILL.md`. If it is missing, install it into the Gradbo folder (ask first):
+
+- **Claude Code:** it comes with the gradbo plugin as a dependency. If it is missing, run `claude plugin install humanizer@gradbo --scope project`.
+- **Codex, Cursor, GitHub Copilot:** `npx skills add blader/humanizer -a <codex|cursor|github-copilot> -y`, run in the Gradbo folder.
+- **OpenCode:** `npx skills add blader/humanizer -a opencode -g -y`.
+- **Gemini CLI:** `gemini skills install https://github.com/blader/humanizer --scope workspace`.
+- **Anything else:** copy the repository's `SKILL.md` into a `humanizer` folder in the agent's skills directory (`.agents/skills/humanizer/` works for most).
+
+Then ask the candidate to restart the agent so it loads the skill. Until it is installed, prepare nothing an employer will read: no tailored CV, cover letter or written answer.
+
+## 4. Browser tool (strongly recommended)
 
 Check your own tools for something that opens pages, clicks, types and uploads files: a browser MCP server or a built-in browser. If there is none, applying stops at "here is everything, please submit it yourself". To add Playwright MCP (needs Node 18+), give the candidate the snippet for their agent, then ask them to restart it:
 
-- **Claude Code:** `claude mcp add playwright -- npx @playwright/mcp@latest`
+- **Claude Code** (from the Gradbo folder): `claude mcp add --scope project playwright -- npx @playwright/mcp@latest`
 - **Codex** (`~/.codex/config.toml`):
 
   ```toml
@@ -60,7 +72,7 @@ Check your own tools for something that opens pages, clicks, types and uploads f
 
 Merge the snippet into the existing file if it has other servers; don't replace it. Playwright MCP opens a visible browser by default, so the candidate can watch and take over for a CAPTCHA.
 
-## 4. Mail (optional)
+## 5. Mail (optional)
 
 See [email.md](email.md), "Which mail access to use". Check your tools for a mail connector first (Gmail, Outlook, Microsoft 365). Without one, the IMAP route needs an app password; `doctor.py --mail` tests the login once the variables are set.
 
@@ -70,6 +82,7 @@ End with one checklist, required items first:
 
 ```
 Gradbo connection    ok
+Humanizer skill      ok
 Browser tool         missing: add Playwright MCP (snippet above), then restart me
 Documents (Python)   ok
 LaTeX (Tectonic)     not needed: your CV is a Word file

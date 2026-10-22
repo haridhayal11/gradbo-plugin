@@ -6,9 +6,18 @@ The goal is a `profile/` the rest of the skill can trust, plus search preference
 
 Run [install.md](install.md) first: check the Gradbo connection, this machine (`scripts/doctor.py`), the browser tool and mail, and give the candidate one checklist. A missing optional item never blocks setup; a missing Gradbo connection does.
 
-## 1. The workspace
+## 1. The Gradbo folder
 
-- Confirm the workspace folder with the candidate if you are not sure the current directory is meant for it.
+Everything lives in one folder ([folder-layout.md](folder-layout.md)).
+
+- **Started in a folder named `Gradbo`, an empty folder, or one holding only agent configuration** (`.agents/`, `.claude/`, `.mcp.json`, `.git/` and the like, which the install commands create): that is the folder. Confirm it with the candidate in one line.
+- **Started somewhere else** (their home directory, a code project, Downloads): don't set up there. If `~/Gradbo` exists, ask them to restart you in it. Otherwise offer to create `~/Gradbo`, then ask them to restart you there (`cd ~/Gradbo`, then start the agent). Agents usually can't write outside the folder they were started in, and the skills and instructions installed for that folder only load there.
+- **Mark the folder:**
+  - Write `AGENTS.md` from [templates/AGENTS.md](../templates/AGENTS.md).
+  - Write `CLAUDE.md` with the single line `@AGENTS.md`.
+  - Write `GEMINI.md` with the same text as `AGENTS.md`.
+  - If any of these files already exists, add a "Gradbo job-search workspace" section instead of replacing it.
+- **The CV they named lives elsewhere** (`~/Downloads/cv.pdf`): copy it in at step 2 and leave the original where it is.
 - If they have a Gradbo export from the retired hosted applier, it already holds `profile/`, `answers/` and past `applications/`. Copy it in, read `profile/facts.md`, and continue from step 3 to fill gaps; don't redo what is verified.
 
 ## 2. The CV

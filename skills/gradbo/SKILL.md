@@ -8,7 +8,7 @@ description: Job search and applications with Gradbo. Use before any gradbo MCP 
 Gradbo has two halves:
 
 - **The gradbo MCP server** finds roles and tracks them. It crawls UK employers' career pages, filters the adverts by the candidate's search preferences and keeps each role's status, fit score and notes. It holds nothing else about the candidate.
-- **The workspace**, a local folder (the directory you were started in unless the candidate says otherwise), holds everything personal: verified facts, the CV, reusable answers, each application's documents and its receipt. You keep it organised. The layout is in [references/folder-layout.md](references/folder-layout.md); read it before writing any file.
+- **The Gradbo folder** is one project folder on the candidate's computer, `~/Gradbo` unless they chose another. It holds everything personal: the CV, verified facts, reusable answers, and each application's documents and receipt. It also holds the skills and an `AGENTS.md` that tells any agent started there what the folder is. You keep it organised; the layout is in [references/folder-layout.md](references/folder-layout.md), so read it before writing any file.
 
 You apply with whatever browser tool this harness gives you, for example Playwright MCP or a browser extension.
 
@@ -21,6 +21,10 @@ You apply with whatever browser tool this harness gives you, for example Playwri
 | Apply to a role (prepare, fill in, submit) | [references/apply.md](references/apply.md), then [questions.md](references/questions.md), [consents.md](references/consents.md) and [documents.md](references/documents.md) as the form needs them |
 | Check email for replies, record an application they sent themselves, report an outcome, tidy the workspace, or check the tracker | [references/organise.md](references/organise.md), [references/email.md](references/email.md) |
 
+**Work only in the Gradbo folder.** If the current directory isn't it (there is no `AGENTS.md` naming it a Gradbo workspace and no `profile/`), check whether `~/Gradbo` exists:
+- If it does, ask the candidate to restart you there (`cd ~/Gradbo`), so their files never scatter.
+- If it doesn't, set the folder up as setup step 1 describes.
+
 If `profile/facts.md` does not exist yet, run setup first, whatever was asked. Setup starts with a preflight ([references/install.md](references/install.md)) that checks the Gradbo connection, this machine, the browser tool and mail.
 
 ## Rules that always apply
@@ -29,7 +33,7 @@ If `profile/facts.md` does not exist yet, run setup first, whatever was asked. S
 2. **Statements of fact are never guessed.** Right to work, sponsorship, convictions, age, disability and similar questions are answered only from a verified fact whose wording and time frame fit the question (now or at the start date). Otherwise ask.
 3. **Read before you write.** Read `profile/facts.md` and the relevant `answers/` files before opening the CV. Read the live advert on the employer's own site before tailoring anything or applying. LinkedIn and Indeed are discovery sources only.
 4. **Never state that the candidate wrote an answer unaided or that no AI was used.** Those are the candidate's own statements to make. Record the employer's AI guidance in the application's `job.md`, then write the answers from verified evidence anyway.
-5. **Prose goes through a writing pass.** Run CV text, cover letters and free-text answers through [references/humanizer.md](references/humanizer.md) (or the `humanizer` skill if it is installed). The pass removes formulaic language; it never adds claims.
+5. **Prose goes through the humanizer skill.** Run CV text, cover letters and free-text answers through the `humanizer` skill before they are saved or sent. It is required. If it isn't installed, install it first ([references/install.md](references/install.md), step 3); if this agent can't invoke skills by name, read its `SKILL.md` and follow it. The pass removes formulaic language; it never adds claims.
 6. **Keep personal details off the server.** Anything sent to the gradbo tools must be impersonal:
    - Fit rationales (`override_fit`) describe the role's requirements and how well they are covered, not the candidate's details. Write "Needs SystemVerilog and UVM; covered", not the candidate's grades or employers.
    - Notes and confirmations (`add_note`, `record_submission`) carry dates, references and folder names, never answers, documents or personal facts.

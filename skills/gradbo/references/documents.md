@@ -38,7 +38,7 @@ The same for every format:
 - Reword a point toward the advert's terms only where the candidate's own wording already supports it ("built test benches in SystemVerilog" may become "built SystemVerilog verification test benches"; it may not gain "UVM" unless the CV says UVM elsewhere).
 - Add nothing that isn't in the CV or `profile/facts.md`: no skills, tools, numbers, employers, grades or outcomes.
 - Cut only what is irrelevant to this role, never dates or employers.
-- Run the reworded text through the writing pass ([humanizer.md](humanizer.md), or the `humanizer` skill if installed).
+- Run the reworded text through the `humanizer` skill.
 
 ### LaTeX
 
@@ -66,7 +66,7 @@ Tectonic must be installed (https://tectonic-typesetting.github.io). Without it,
 
 ## Cover letters
 
-Write the text first: the candidate's name, contact line, then 3-4 short paragraphs following [templates/cover-letter.tex](../templates/cover-letter.tex)'s outline. Every claim must come from the facts, the CV or the advert. Then run the writing pass.
+Write the text first: the candidate's name, contact line, then 3-4 short paragraphs following [templates/cover-letter.tex](../templates/cover-letter.tex)'s outline. Every claim must come from the facts, the CV or the advert. Then run it through the `humanizer` skill.
 
 - **LaTeX candidates:** fill in `templates/cover-letter.tex` as `cover-letter.tex`, then `docs.py check --one-page cover-letter.tex`.
 - **Everyone else:** save the text as `cover-letter.txt`, then run `docs.py letter cover-letter.txt cover-letter.docx` and `docs.py check --one-page cover-letter.docx`.

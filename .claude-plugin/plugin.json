@@ -1,6 +1,6 @@
 {
   "name": "gradbo",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Find early-careers roles with Gradbo, keep your profile, answers and applications in a local workspace, and apply with your own browser agent while Gradbo tracks what you sent.",
   "author": {
     "name": "Gradbo"
@@ -21,5 +21,8 @@
       "description": "Leave as it is unless you run your own Gradbo server.",
       "default": "https://app.gradbo.com"
     }
-  }
+  },
+  "dependencies": [
+    "humanizer"
+  ]
 }

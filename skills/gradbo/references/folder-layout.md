@@ -1,7 +1,13 @@
-# Workspace layout
+# The Gradbo folder
+
+One folder holds everything for the candidate's job search: `~/Gradbo` by default (`%USERPROFILE%\Gradbo` on Windows), or the folder they chose. Always start the agent there.
 
 ```
-<workspace>/
+Gradbo/
+  AGENTS.md                     what this folder is, for any agent started here (templates/AGENTS.md)
+  CLAUDE.md, GEMINI.md          the same, for Claude Code and Gemini CLI
+  .agents/skills/ or .claude/   the gradbo and humanizer skills when installed for this folder only
+  .mcp.json                     Claude Code's project-level tools (the browser), if added here
   profile/
     facts.md                    verified facts, one section per key
     cv/
@@ -16,7 +22,7 @@
     mail-check.md               the date replies were last checked (email.md)
 ```
 
-Create folders as you need them. Never edit the CV in `profile/cv/` for one application; tailor a copy in the application folder.
+Create folders as you need them. Never edit the CV in `profile/cv/` for one application; tailor a copy in the application folder. Never put job-search files anywhere outside the Gradbo folder, and never move the candidate's other files into it without asking.
 
 ## Names
 

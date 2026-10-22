@@ -11,6 +11,16 @@
       "description": "Find early-careers roles with Gradbo and apply with your own agent, keeping your profile and receipts local.",
       "source": "./",
       "category": "productivity"
+    },
+    {
+      "name": "humanizer",
+      "description": "Rewrite AI-sounding text so it reads like the writer without changing what it says (blader/humanizer, MIT). Required by gradbo.",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/blader/humanizer.git"
+      },
+      "category": "productivity",
+      "homepage": "https://github.com/blader/humanizer"
     }
   ]
 }

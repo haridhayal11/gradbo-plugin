@@ -19,7 +19,7 @@ Create `applications/YYYY-MM-DD_employer_role/` ([folder-layout.md](folder-layou
 ## 3. Documents
 
 - **CV:** tailor a copy of the candidate's CV for the advert, as [documents.md](documents.md) describes for LaTeX, Word or PDF-only CVs. You may reorder, and reword a point toward the advert's terms only where the candidate's own wording already supports it; add nothing the CV and facts don't contain. `docs.py check` and `docs.py compare` must both pass.
-- **Cover letter:** write one when the form asks for one or offers an upload for one ([documents.md](documents.md), "Cover letters"). Use one A4 page and the advert's own requirements. Every claim must come from the facts or CV. Run the writing pass, then check it.
+- **Cover letter:** write one when the form asks for one or offers an upload for one ([documents.md](documents.md), "Cover letters"). Use one A4 page and the advert's own requirements. Every claim must come from the facts or CV. Run it through the `humanizer` skill, then check it.
 - Once the documents pass, `update_status(job_id, "Materials prepared")` (from Shortlisted or Researching; skip it if the transition is refused).
 
 ## 4. The form
