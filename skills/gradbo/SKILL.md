@@ -19,7 +19,7 @@ You apply with whatever browser tool this harness gives you, for example Playwri
 | Start, or bring their profile up to date (new CV, new facts, preferences) | [references/setup.md](references/setup.md) |
 | See new roles, or triage what Gradbo found | [references/find.md](references/find.md) |
 | Apply to a role (prepare, fill in, submit) | [references/apply.md](references/apply.md), then [questions.md](references/questions.md), [consents.md](references/consents.md) and [documents.md](references/documents.md) as the form needs them |
-| Record an application they sent themselves, report an outcome, tidy the workspace, or check the tracker | [references/organise.md](references/organise.md) |
+| Check email for replies, record an application they sent themselves, report an outcome, tidy the workspace, or check the tracker | [references/organise.md](references/organise.md), [references/email.md](references/email.md) |
 
 If `profile/facts.md` does not exist yet, run setup first, whatever was asked.
 
@@ -29,16 +29,17 @@ If `profile/facts.md` does not exist yet, run setup first, whatever was asked.
 2. **Statements of fact are never guessed.** Right to work, sponsorship, convictions, age, disability and similar questions are answered only from a verified fact whose wording and time frame fit the question (now or at the start date). Otherwise ask.
 3. **Read before you write.** Read `profile/facts.md` and the relevant `answers/` files before opening the CV. Read the live advert on the employer's own site before tailoring anything or applying. LinkedIn and Indeed are discovery sources only.
 4. **Never state that the candidate wrote an answer unaided or that no AI was used.** Those are the candidate's own statements to make. Record the employer's AI guidance in the application's `job.md`, then write the answers from verified evidence anyway.
-5. **Prose goes through a humanizer pass.** Run CV text, cover letters and free-text answers through the `humanizer` skill if this harness has it, otherwise through [references/prose-checks.md](references/prose-checks.md). The pass removes formulaic language; it never adds claims.
+5. **Prose goes through a writing pass.** Run CV text, cover letters and free-text answers through [references/humanizer.md](references/humanizer.md) (or the `humanizer` skill if it is installed). The pass removes formulaic language; it never adds claims.
 6. **Keep personal details off the server.** Anything sent to the gradbo tools must be impersonal:
    - Fit rationales (`override_fit`) describe the role's requirements and how well they are covered, not the candidate's details. Write "Needs SystemVerilog and UVM; covered", not the candidate's grades or employers.
    - Notes and confirmations (`add_note`, `record_submission`) carry dates, references and folder names, never answers, documents or personal facts.
    - Never send the CV, `facts.md`, answers or receipts through any tool.
-7. **No credentials in the workspace.** Employer passwords live in the browser's own password manager, or the candidate types them in. Never write passwords, one-time codes, cookies or identity documents to any file, note or tool call.
-8. **Exclude clearance and vetting roles.** If an advert requires security clearance or vetting, don't apply; set the role to Excluded with the reason. When sponsorship or eligibility is unclear, record what the advert says rather than guessing.
-9. **Status changes go through the tools.** Use `update_status` and `record_submission`; an illegal transition is refused, so follow the legal path (Shortlisted → Materials prepared → Submitted) rather than forcing it.
-10. **Every submission has a receipt.** Before calling `record_submission`, make sure the role has its folder under `applications/` with `job.md` and `receipt.md`, and pass that folder. This includes applications the candidate sent themselves ([references/organise.md](references/organise.md)).
-11. **Stop at protections.** On a CAPTCHA, anti-bot block or an access check you cannot pass with direct page controls, stop retrying. Write `manual-handoff.md` and hand over to the candidate. Never try to defeat the protection.
+7. **Email is read only.** Read the candidate's mail only for verification codes and employers' replies ([references/email.md](references/email.md)); never send, delete or mark messages.
+8. **No credentials in the workspace.** Employer passwords live in the browser's own password manager, or the candidate types them in. Never write passwords, one-time codes, cookies or identity documents to any file, note or tool call.
+9. **Exclude clearance and vetting roles.** If an advert requires security clearance or vetting, don't apply; set the role to Excluded with the reason. When sponsorship or eligibility is unclear, record what the advert says rather than guessing.
+10. **Status changes go through the tools.** Use `update_status` and `record_submission`; an illegal transition is refused, so follow the legal path (Shortlisted → Materials prepared → Submitted) rather than forcing it.
+11. **Every submission has a receipt.** Before calling `record_submission`, make sure the role has its folder under `applications/` with `job.md` and `receipt.md`, and pass that folder. This includes applications the candidate sent themselves ([references/organise.md](references/organise.md)).
+12. **Stop at protections.** On a CAPTCHA, anti-bot block or an access check you cannot pass with direct page controls, stop retrying. Write `manual-handoff.md` and hand over to the candidate. Never try to defeat the protection.
 
 ## The gradbo tools
 

@@ -9,15 +9,15 @@ The goal is a `profile/` the rest of the skill can trust, plus search preference
 
 ## 2. The CV
 
-- Put the canonical CV in `profile/cv/`: `main.tex` if the candidate has LaTeX source, otherwise their PDF as `main.pdf`.
-- Produce `profile/cv/main.txt` with `pdftotext -layout main.pdf main.txt` (compile `main.tex` first; see [documents.md](documents.md)). If the text comes out empty or garbled, the PDF is a scan; ask for a text-based PDF or the source.
+- Put the canonical CV in `profile/cv/`: `main.tex` for LaTeX source, `main.docx` for Word, and their PDF as `main.pdf` either way. Ask for the Word or LaTeX source if they only sent a PDF: without it, applications can't be tailored.
+- Run `docs.py check` on the source (or the PDF) from `profile/cv/` ([documents.md](documents.md)); it writes `main.txt`. If the text comes out empty or garbled, the PDF is a scan; ask for a text-based PDF or the source.
 - A new CV replaces the old one: move the old files to `profile/cv/previous/YYYY-MM-DD/`, then re-check every fact whose source is the CV (step 3) and mark changed or vanished ones `stale`.
 
 ## 3. Facts
 
 Read `main.txt` and write `profile/facts.md` in the format in [folder-layout.md](folder-layout.md). Use the keys in [question-keys.md](question-keys.md) where one fits.
 
-- **From the CV** (status `verified`, source `cv: profile/cv/main.tex` with the quoted line): name, email, phone, links, education (institution, degree, grade or predicted grade, start and end months), experience (employer, role, dates, what they did), projects, skills.
+- **From the CV** (status `verified`, source `cv: profile/cv/main.txt` with the quoted line): name, email, phone, links, education (institution, degree, grade or predicted grade, start and end months), experience (employer, role, dates, what they did), projects, skills.
 - **From the candidate** (they are not in a CV; ask in one short batch, then record each with source `candidate: told the agent on <date>`):
   - `work.uk.right_to_work`, and when it ends (`valid until`)
   - `work.uk.requires_sponsorship`, now and in future
@@ -28,7 +28,11 @@ Read `main.txt` and write `profile/facts.md` in the format in [folder-layout.md]
 - Demographic and equal-opportunities answers (`demographics.*`) are optional. Ask once whether they want them answered or left as "Prefer not to say", and record whichever they choose.
 - Never record passwords, codes, bank, passport or national insurance numbers.
 
-## 4. Search preferences
+## 4. Email
+
+Ask how you may read their email for verification codes and employers' replies: a mail connector in this agent, the IMAP script with an app password they set in their environment, or not at all (they read codes out). Record it as `workspace.mail_access`. See [email.md](email.md).
+
+## 5. Search preferences
 
 The server filters and keyword-scores adverts with these; they decide what reaches the digest.
 
@@ -36,6 +40,6 @@ The server filters and keyword-scores adverts with these; they decide what reach
 2. Propose values from the profile: up to six role families in the candidate's order of preference, seniority (`internship`, `graduate`, `junior`, …), `graduation_year` for graduate schemes, `available_from` (YYYY-MM), preferred locations, `needs_sponsorship`, keywords, and employers to favour or hide. Keep `exclude_clearance` true.
 3. Show the proposal and save it with `set_preferences` once the candidate agrees. Only send fields they confirmed; these are search settings, not personal facts.
 
-## 5. Check the connection
+## 6. Check the connection
 
 Call `get_digest(limit=5)`. If it fails with an authentication error, the token is missing or read-only; see the end of SKILL.md.

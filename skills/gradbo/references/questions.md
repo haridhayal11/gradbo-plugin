@@ -38,7 +38,7 @@ Motivation, competency and "tell us about a time" questions:
 
 1. Check `answers/` for one you can reuse or adapt; an employer-specific question ("Why us?") always needs this employer's specifics.
 2. Otherwise draft one from verified evidence: the facts, the CV, and the advert for the employer and role. Use real examples only, with no invented situations, numbers or outcomes. Keep within the word or character limit.
-3. Run the humanizer pass ([prose-checks.md](prose-checks.md) if the `humanizer` skill isn't available).
+3. Run the writing pass ([humanizer.md](humanizer.md), or the `humanizer` skill if installed).
 4. Save it to `answers/` as `status: draft, origin: assisted`, or in the employer file if it only fits this employer.
 
 If the question needs an example the evidence doesn't have, ask the candidate for one rather than writing around the gap.

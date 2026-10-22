@@ -5,17 +5,18 @@
   profile/
     facts.md                    verified facts, one section per key
     cv/
-      main.tex                  the canonical CV source (or the candidate's PDF if they have no source)
-      main.pdf                  compiled from main.tex
-      main.txt                  pdftotext -layout of main.pdf
+      main.tex | main.docx      the canonical CV source, LaTeX or Word (absent if they only have a PDF)
+      main.pdf                  the compiled or original PDF
+      main.txt                  its extracted text (docs.py check writes it)
   answers/
     <question-key>.md           reusable answers to recurring questions
     employers/<employer-slug>.md  answers and dropdown choices that belong to one employer
   applications/
     YYYY-MM-DD_employer_role/   one folder per application (see below)
+    mail-check.md               the date replies were last checked (email.md)
 ```
 
-Create folders as you need them. Never edit `profile/cv/main.tex` for one application; copy it into the application folder first.
+Create folders as you need them. Never edit the CV in `profile/cv/` for one application; tailor a copy in the application folder.
 
 ## Names
 
@@ -72,8 +73,8 @@ Never store passwords, one-time codes, bank details, national insurance or passp
 ```
 applications/YYYY-MM-DD_employer_role/
   job.md                  the role: links, Gradbo job id, closing date, live-advert check, eligibility notes, AI guidance
-  main.tex main.pdf main.txt render/   the tailored CV and its checks
-  cover-letter.tex cover-letter.pdf cover-letter.txt   when one is sent
+  main.tex main.pdf | <Name>_CV.docx   the tailored CV (LaTeX or Word), with main.txt / render/ from its checks
+  cover-letter.tex | cover-letter.txt + cover-letter.docx, and their PDF when built   when one is sent
   application-notes.md    the form as you work through it: fields, answers, open questions, where you stopped
   manual-handoff.md       only when a human has to take over (templates/manual-handoff.md)
   receipt.md receipt.json the exact submission (templates/receipt.md)

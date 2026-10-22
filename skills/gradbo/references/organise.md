@@ -24,6 +24,10 @@ When the candidate tells you they applied on their own:
 3. Write `receipt.md` from [templates/receipt.md](../templates/receipt.md) with what they tell you: the date, the confirmation, which CV or cover letter they sent if they know. Leave out what you don't know rather than guessing, and note "Submitted by the candidate; answers not seen".
 4. `record_submission(job_id, application_dir="applications/<folder>", confirmation="<reference>")`.
 
+## Replies
+
+Check the candidate's email for employers' replies ([email.md](email.md), "Replies after applying") and update the tracker from them.
+
 ## Tracker
 
 Check that the server and the workspace agree:
@@ -32,7 +36,7 @@ Check that the server and the workspace agree:
 2. List `applications/*/receipt.md`.
 3. A receipt whose role is not Submitted on the server: `record_submission` with that folder and its confirmation.
 4. A role Submitted on the server with no receipt: tell the candidate; it was applied to elsewhere or the receipt was lost.
-5. Outcomes the candidate reports (an assessment invite, a rejection, an offer): `update_status` (Submitted → Assessment completed, Rejected or Offer) and add a dated note in the folder's `receipt.md` under "Afterwards".
+5. Outcomes the candidate reports or email shows (an assessment invite, a rejection, an offer): handle them as in the table in [email.md](email.md).
 
 ## Never
 

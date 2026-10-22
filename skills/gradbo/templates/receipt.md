@@ -10,7 +10,7 @@
 
 | File | SHA-256 | Notes |
 |---|---|---|
-| main.pdf | <sha256> | <how it was tailored, e.g. "projects reordered for RTL design; nothing added"> |
+| <main.pdf or Name_CV.docx> | <sha256> | <how it was tailored, e.g. "projects reordered for RTL design; nothing added"> |
 | cover-letter.pdf | <sha256> | <or "not sent"> |
 
 ## Submitted answers
