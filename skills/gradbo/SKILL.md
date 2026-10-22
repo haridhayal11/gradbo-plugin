@@ -63,6 +63,6 @@ If `profile/facts.md` does not exist yet, run setup first, whatever was asked. S
 | `add_job_by_url(url, ...)` | Add a role the crawl has not found, from the employer's advert link |
 | `get_preferences()`, `set_preferences(preferences)` | The coarse search filter the server applies |
 | `get_criteria()` | The eligibility rules and legal status transitions |
-| `export_tracker()` | The whole tracker as CSV, for the candidate's own records |
+| `export_tracker(statuses=None)` | The tracker as CSV for the candidate's own records: by default the roles shortlisted, watched or applied to |
 
 If the gradbo tools are missing or refuse the token, follow [references/install.md](references/install.md), step 1.
