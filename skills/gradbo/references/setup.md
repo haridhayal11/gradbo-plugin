@@ -5,7 +5,7 @@ The goal is a `profile/` the rest of the skill can trust, plus search preference
 ## 1. The workspace
 
 - Confirm the workspace folder with the candidate if you are not sure the current directory is meant for it.
-- If they have a Gradbo export (`gradbo export-local`), it already holds `profile/`, `answers/` and past `applications/`. Copy it in, read `profile/facts.md`, and continue from step 3 to fill gaps; don't redo what is verified.
+- If they have a Gradbo export from the retired hosted applier, it already holds `profile/`, `answers/` and past `applications/`. Copy it in, read `profile/facts.md`, and continue from step 3 to fill gaps; don't redo what is verified.
 
 ## 2. The CV
 
