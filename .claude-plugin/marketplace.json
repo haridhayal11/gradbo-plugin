@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "gradbo",
+  "description": "Gradbo's agent plugin",
+  "owner": {
+    "name": "Gradbo"
+  },
+  "plugins": [
+    {
+      "name": "gradbo",
+      "description": "Find early-careers roles with Gradbo and apply with your own agent, keeping your profile and receipts local.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

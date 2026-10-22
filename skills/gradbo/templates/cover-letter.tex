@@ -1,0 +1,28 @@
+% Cover letter on one A4 page. Replace every <...> from profile/facts.md, the CV
+% and the advert only; then run the humanizer pass on the prose and check the PDF
+% with scripts/check_pdf.sh --one-page cover-letter.tex.
+% XeTeX (Tectonic) with fontspec. Ligatures and kerning stay off so applicant
+% tracking systems extract "office" and "AWS" rather than ligature glyphs or
+% split letter pairs. Never use \usepackage[T1]{fontenc} here.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage{fontspec}
+\setmainfont{lmroman10}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic,Ligatures={TeX,NoCommon},Kerning=Off]
+\pagestyle{empty}\setlength{\parindent}{0pt}\setlength{\parskip}{10pt}
+\begin{document}
+{\large\bfseries <Full name>}\par
+<email> \quad <phone>\par
+<Role title> --- <Employer>
+
+Dear Hiring Team,
+
+<Who you are and why this role: degree, institution, expected graduation, availability against the advert's start date.>
+
+<The advert's main requirements, each met with real evidence from the CV: experience, projects, skills.>
+
+<What draws the candidate to this employer and role, from the advert and verified facts only.>
+
+Yours sincerely,
+
+<Full name>
+\end{document}

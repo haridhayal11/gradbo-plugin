@@ -1,0 +1,39 @@
+# Organise the workspace
+
+Do this after each application, and whenever the candidate asks to tidy up or check where things stand.
+
+## Answers
+
+- After an application, look at `application-notes.md` for answers worth reusing: free-text answers, and choices that will recur (notice period, preferred locations, salary expectation).
+- File each under its canonical key ([question-keys.md](question-keys.md)) in `answers/`, or under `answers/employers/<slug>.md` when it only fits that employer. If a file exists, keep the better answer and add the new wording to the **Question** line as an alternative only when it differs in meaning.
+- Facts the candidate gave you during the application go into `profile/facts.md` with source `candidate: told the agent on <date>`.
+
+## Facts
+
+- A fact whose `valid until` has passed: change its status to `stale` and tell the candidate.
+- Two facts that disagree (two graduation dates, an answer that contradicts a fact): keep both, mark the older one `stale`, and ask the candidate which is right next time you talk.
+- An answer whose `uses facts` include a fact that changed: mark it `stale`.
+- After a new CV, re-check every fact with a `cv:` source against the new text.
+
+## Applications the candidate sent themselves
+
+When the candidate tells you they applied on their own:
+
+1. Find the role (`search_jobs`, `list_jobs`), or add it with `add_job_by_url`.
+2. Create its folder as usual ([folder-layout.md](folder-layout.md)), with `job.md` from what `get_job` returns.
+3. Write `receipt.md` from [templates/receipt.md](../templates/receipt.md) with what they tell you: the date, the confirmation, which CV or cover letter they sent if they know. Leave out what you don't know rather than guessing, and note "Submitted by the candidate; answers not seen".
+4. `record_submission(job_id, application_dir="applications/<folder>", confirmation="<reference>")`.
+
+## Tracker
+
+Check that the server and the workspace agree:
+
+1. `list_jobs(status="Submitted", limit=200)`, and the same for `Assessment completed`, `Offer` and `Rejected`.
+2. List `applications/*/receipt.md`.
+3. A receipt whose role is not Submitted on the server: `record_submission` with that folder and its confirmation.
+4. A role Submitted on the server with no receipt: tell the candidate; it was applied to elsewhere or the receipt was lost.
+5. Outcomes the candidate reports (an assessment invite, a rejection, an offer): `update_status` (Submitted → Assessment completed, Rejected or Offer) and add a dated note in the folder's `receipt.md` under "Afterwards".
+
+## Never
+
+Don't delete application folders or receipts, and don't move files the candidate made themselves. Ask first.
