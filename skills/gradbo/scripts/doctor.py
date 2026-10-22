@@ -46,6 +46,26 @@ def version(command: list[str]) -> str | None:
     return text[0][:80] if text else ""
 
 
+def chromium_browser() -> str | None:
+    """Chrome or Edge, which the Playwright Extension needs."""
+    if SYSTEM == "macos":
+        for app in ("Google Chrome", "Microsoft Edge", "Chromium", "Brave Browser"):
+            if Path(f"/Applications/{app}.app").exists() or (Path.home() / f"Applications/{app}.app").exists():
+                return app
+        return None
+    if SYSTEM == "windows":
+        roots = [os.environ.get(v, "") for v in ("ProgramFiles", "ProgramFiles(x86)", "LOCALAPPDATA")]
+        for root in filter(None, roots):
+            for rel, name in (("Google/Chrome/Application/chrome.exe", "Google Chrome"), ("Microsoft/Edge/Application/msedge.exe", "Microsoft Edge")):
+                if Path(root, rel).exists():
+                    return name
+        return None
+    for exe in ("google-chrome", "google-chrome-stable", "microsoft-edge", "microsoft-edge-stable", "chromium", "chromium-browser", "brave-browser"):
+        if shutil.which(exe):
+            return exe
+    return None
+
+
 def word_installed() -> bool:
     if SYSTEM == "macos":
         return Path("/Applications/Microsoft Word.app").exists()
@@ -119,6 +139,9 @@ def check(mail: bool) -> list[dict]:
     major = int(node_version.lstrip("v").split(".")[0]) if node_version and node_version.lstrip("v")[:1].isdigit() else 0
     add("Node 18+ (for Playwright MCP, the usual browser tool, and `npx skills`)", major >= 18, "recommended",
         node_version or "not found", "node")
+    browser = chromium_browser()
+    add("Chrome or Edge (the agent applies in your browser through the Playwright Extension)", bool(browser), "recommended",
+        browser or "not found", fix="install Google Chrome or Microsoft Edge, then the Playwright Extension (references/install.md step 4)")
     tectonic = shutil.which("tectonic")
     add("Tectonic (only for LaTeX CVs)", bool(tectonic), "optional", version([tectonic, "--version"]) if tectonic else "not found", "tectonic")
     office = shutil.which("soffice") or shutil.which("libreoffice")

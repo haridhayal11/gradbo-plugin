@@ -26,12 +26,16 @@ Create `applications/YYYY-MM-DD_employer_role/` ([folder-layout.md](folder-layou
 
 Work through the application in the browser, page by page. Keep `application-notes.md` up to date as you go: each field's label as shown, what you entered, where the value came from, and any open question. If the session ends, this is how you or the candidate resume.
 
-- **Accounts:** create the employer account or sign in when the form needs one, with the candidate's email from the facts. Let the browser's password manager generate and store the password, or ask the candidate to type it. Never write it down. For a verification email or code, follow [email.md](email.md). Don't store the code.
+- **Accounts:** you are in the candidate's own browser, so they may already be signed in, or their password manager may offer a saved login.
+  - **Signing in:** if the browser autofills the login, sign in. If it doesn't, ask the candidate to sign in in that tab, then carry on.
+  - **A new employer account:** fill in everything but the password with facts (the email from the facts). Then ask the candidate to click the password field and accept their browser's suggested strong password (or type their own), so it is saved in their password manager.
+  - Never read out, type, copy or record a password.
+  - For a verification email or code, follow [email.md](email.md). Don't store the code.
 - **Fields:** fill each from [questions.md](questions.md). Identity and contact fields come straight from the facts.
 - **Uploads:** upload files by their path in the application folder (for example Playwright MCP's `browser_file_upload` with the absolute path). If this browser tool cannot set a file input, ask the candidate to choose the file, telling them its exact path, then carry on.
 - **Consents and declarations:** follow [consents.md](consents.md).
 - **Controls you can't operate** (custom widgets that ignore input, embedded assessments): write `manual-handoff.md` from [templates/manual-handoff.md](../templates/manual-handoff.md) and hand over.
-- **CAPTCHA or anti-bot block:** stop, write `manual-handoff.md`, and ask the candidate to complete that step in their own browser. Resume once they say it is done.
+- **CAPTCHA or anti-bot block:** stop, write `manual-handoff.md`, and ask the candidate to complete that step in the same tab (it is their browser). Resume once they say it is done.
 
 Before the final submit, go back over every page: all required fields are filled, every statement of fact matches a verified fact, and the uploaded files are the checked ones.
 

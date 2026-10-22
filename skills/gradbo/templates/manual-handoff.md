@@ -23,7 +23,7 @@
 ## Resume checklist
 
 1. Stop automated retries on the protected page.
-2. The candidate completes the step above in their own browser, or in the agent's browser window if they share it.
+2. The candidate completes the step above in the same tab of their browser.
 3. The agent re-reads the page, confirms it is past the blocker, and checks every field already filled.
 4. Continue the application from the resume point and record the handoff in the receipt's Notes.
 

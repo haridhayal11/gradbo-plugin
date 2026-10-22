@@ -40,10 +40,10 @@ Run the install commands below inside it, and always start your agent there.
 ```sh
 claude plugin marketplace add haridhayal11/gradbo-plugin
 claude plugin install gradbo@gradbo --scope project --config token=<your token>
-claude mcp add --scope project playwright -- npx @playwright/mcp@latest
+claude mcp add --scope project playwright -- npx @playwright/mcp@latest --extension
 ```
 
-The plugin brings the Gradbo skill and the connection, and installs the humanizer plugin as a dependency. `--scope project` records all of it in the folder's `.claude/settings.json`, and Claude Code keeps the token in its credential store. To change the token later, run `claude plugin configure gradbo@gradbo`. For your own Gradbo server, add `--config server=https://your.server`. The last line adds the browser the skill applies with.
+The plugin brings the Gradbo skill and the connection, and installs the humanizer plugin as a dependency. `--scope project` records all of it in the folder's `.claude/settings.json`, and Claude Code keeps the token in its credential store. To change the token later, run `claude plugin configure gradbo@gradbo`. For your own Gradbo server, add `--config server=https://your.server`. The last line connects Claude Code to your own browser (see "Your browser" below).
 
 ### Any other agent: the skills
 
@@ -56,9 +56,20 @@ npx skills add blader/humanizer
 
 This needs Node 22.20 or later. Tested with Codex; OpenCode 1.19.3 connected to Gradbo but didn't list skills from a project's `.agents/skills`, so install both skills globally there (add `-g`). [skills](https://github.com/vercel-labs/skills) detects your agents (Codex, Gemini CLI, Cursor, GitHub Copilot, OpenCode and many more) and copies `skills/gradbo` into each. Without `-g`, the skills go into the folder's `.agents/skills/`, which Codex, Cursor and Copilot read when started there. To do it by hand, copy `skills/gradbo` and the humanizer's `SKILL.md` into `.agents/skills/gradbo/` and `.agents/skills/humanizer/`. Gemini CLI: `gemini skills install https://github.com/haridhayal11/gradbo-plugin --path skills/gradbo --scope workspace`, and the same for `https://github.com/blader/humanizer`.
 
+### Your browser
+
+The agent applies in **your own Chrome or Edge**, with your logins, saved passwords and autofill, using [Playwright MCP](https://github.com/microsoft/playwright-mcp) in extension mode:
+
+1. Install the [Playwright Extension](https://chromewebstore.google.com/detail/playwright-extension/mmlmfjhmonkocbjadbfplnigmagldckm) in Chrome or Edge.
+2. Add Playwright MCP with `--extension` to your agent: the Claude Code line above, or the `playwright` entry described under "Any other agent: the connection".
+
+The first time the agent uses the browser in a session, your browser asks you to allow the connection and pick a tab. The agent works only in its own tab group and leaves your other tabs alone. When a site needs a password, your password manager fills it, or you accept its suggested password for a new account. The agent never sees or types it.
+
 ### Any other agent: the connection
 
 Add the server to your agent's MCP settings.
+Every other agent also needs the `playwright` entry with `--extension` from "Your browser"; the Codex and Cursor snippets below include it. For the rest, add `{"command": "npx", "args": ["@playwright/mcp@latest", "--extension"]}` in the same file and format as the gradbo entry.
+
 
 **Codex** (`~/.codex/config.toml`):
 
@@ -66,6 +77,10 @@ Add the server to your agent's MCP settings.
 [mcp_servers.gradbo]
 url = "https://app.gradbo.com/mcp/"
 bearer_token_env_var = "GRADBO_TOKEN"
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest", "--extension"]
 ```
 
 **Gemini CLI** (`~/.gemini/settings.json`; `httpUrl`, not `url`):
@@ -79,7 +94,8 @@ Gemini CLI documents `$VAR` expansion in settings but doesn't say it applies to 
 **Cursor** (`~/.cursor/mcp.json`):
 
 ```json
-{"mcpServers": {"gradbo": {"url": "https://app.gradbo.com/mcp/", "headers": {"Authorization": "Bearer ${env:GRADBO_TOKEN}"}}}}
+{"mcpServers": {"gradbo": {"url": "https://app.gradbo.com/mcp/", "headers": {"Authorization": "Bearer ${env:GRADBO_TOKEN}"}},
+                "playwright": {"command": "npx", "args": ["@playwright/mcp@latest", "--extension"]}}}
 ```
 
 **GitHub Copilot in VS Code** (`.vscode/mcp.json`, or the user `mcp.json` via **MCP: Open User Configuration**). VS Code asks for the token once and stores it securely:
@@ -107,7 +123,7 @@ The skill checks all of this itself at the start of setup (`scripts/doctor.py`, 
 
 | For | Install | Without it |
 |---|---|---|
-| Applying | A browser tool in your agent, e.g. [Playwright MCP](https://github.com/microsoft/playwright-mcp) | The skill prepares everything and you submit the form yourself |
+| Applying | Chrome or Edge with the Playwright Extension, and Playwright MCP with `--extension` in your agent | The skill prepares everything and you submit the form yourself |
 | Checking and tailoring documents | Python 3.10+, ideally with [uv](https://docs.astral.sh/uv/) (`scripts/docs.py` fetches its own packages under uv) | Your CV is sent unchanged |
 | LaTeX CVs | [Tectonic](https://tectonic-typesetting.github.io) | Your compiled PDF is sent unchanged |
 | Seeing Word CVs' pages | LibreOffice, or Word on Windows/macOS | Word CVs are checked by text only |

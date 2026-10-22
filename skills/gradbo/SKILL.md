@@ -10,7 +10,7 @@ Gradbo has two halves:
 - **The gradbo MCP server** finds roles and tracks them. It crawls UK employers' career pages, filters the adverts by the candidate's search preferences and keeps each role's status, fit score and notes. It holds nothing else about the candidate.
 - **The Gradbo folder** is one project folder on the candidate's computer, `~/Gradbo` unless they chose another. It holds everything personal: the CV, verified facts, reusable answers, and each application's documents and receipt. It also holds the skills and an `AGENTS.md` that tells any agent started there what the folder is. You keep it organised; the layout is in [references/folder-layout.md](references/folder-layout.md), so read it before writing any file.
 
-You apply with whatever browser tool this harness gives you, for example Playwright MCP or a browser extension.
+You apply in the candidate's own Chrome or Edge, through Playwright MCP's browser extension or the agent's own Chrome integration, so their logins and saved passwords are there.
 
 ## Pick the task
 
@@ -39,7 +39,7 @@ If `profile/facts.md` does not exist yet, run setup first, whatever was asked. S
    - Notes and confirmations (`add_note`, `record_submission`) carry dates, references and folder names, never answers, documents or personal facts.
    - Never send the CV, `facts.md`, answers or receipts through any tool.
 7. **Email is read only.** Read the candidate's mail only for verification codes and employers' replies ([references/email.md](references/email.md)); never send, delete or mark messages.
-8. **No credentials in the workspace.** Employer passwords live in the browser's own password manager, or the candidate types them in. Never write passwords, one-time codes, cookies or identity documents to any file, note or tool call.
+8. **No credentials in the workspace.** You apply in the candidate's own browser ([references/install.md](references/install.md), step 4). Employer passwords live in its password manager, and the candidate accepts or types them; you never read or type one. Never write passwords, one-time codes, cookies or identity documents to any file, note or tool call.
 9. **Exclude clearance and vetting roles.** If an advert requires security clearance or vetting, don't apply; set the role to Excluded with the reason. When sponsorship or eligibility is unclear, record what the advert says rather than guessing.
 10. **Status changes go through the tools.** Use `update_status` and `record_submission`; an illegal transition is refused, so follow the legal path (Shortlisted → Materials prepared → Submitted) rather than forcing it.
 11. **Every submission has a receipt.** Before calling `record_submission`, make sure the role has its folder under `applications/` with `job.md` and `receipt.md`, and pass that folder. This includes applications the candidate sent themselves ([references/organise.md](references/organise.md)).

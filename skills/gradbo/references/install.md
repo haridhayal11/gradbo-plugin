@@ -39,38 +39,48 @@ Every piece of prose the skill writes goes through the `humanizer` skill ([blade
 
 Then ask the candidate to restart the agent so it loads the skill. Until it is installed, prepare nothing an employer will read: no tailored CV, cover letter or written answer.
 
-## 4. Browser tool (strongly recommended)
+## 4. The candidate's browser (strongly recommended)
 
-Check your own tools for something that opens pages, clicks, types and uploads files: a browser MCP server or a built-in browser. If there is none, applying stops at "here is everything, please submit it yourself". To add Playwright MCP (needs Node 18+), give the candidate the snippet for their agent, then ask them to restart it:
+You apply in the candidate's own Chrome or Edge, with their logins, saved passwords and autofill, through Playwright MCP in extension mode. Check your tools for Playwright's (`browser_navigate`, `browser_snapshot` and the rest). Without a browser tool, applying stops at "here is everything, please submit it yourself".
 
-- **Claude Code** (from the Gradbo folder): `claude mcp add --scope project playwright -- npx @playwright/mcp@latest`
+To set it up (needs Node 18+ and Chrome or Edge), the candidate:
+
+1. Installs the [Playwright Extension](https://chromewebstore.google.com/detail/playwright-extension/mmlmfjhmonkocbjadbfplnigmagldckm) in Chrome or Edge.
+2. Adds Playwright MCP with `--extension` to this agent, using the snippet below, and restarts the agent:
+
+- **Claude Code** (from the Gradbo folder): `claude mcp add --scope project playwright -- npx @playwright/mcp@latest --extension`
 - **Codex** (`~/.codex/config.toml`):
 
   ```toml
   [mcp_servers.playwright]
   command = "npx"
-  args = ["@playwright/mcp@latest"]
+  args = ["@playwright/mcp@latest", "--extension"]
   ```
 
 - **Gemini CLI** (`~/.gemini/settings.json`) and **Cursor** (`~/.cursor/mcp.json`):
 
   ```json
-  {"mcpServers": {"playwright": {"command": "npx", "args": ["@playwright/mcp@latest"]}}}
+  {"mcpServers": {"playwright": {"command": "npx", "args": ["@playwright/mcp@latest", "--extension"]}}}
   ```
 
 - **VS Code with Copilot** (user `mcp.json`, via **MCP: Open User Configuration**):
 
   ```json
-  {"servers": {"playwright": {"command": "npx", "args": ["@playwright/mcp@latest"]}}}
+  {"servers": {"playwright": {"command": "npx", "args": ["@playwright/mcp@latest", "--extension"]}}}
   ```
 
 - **OpenCode** (`~/.config/opencode/opencode.json`):
 
   ```json
-  {"mcp": {"playwright": {"type": "local", "command": ["npx", "@playwright/mcp@latest"], "enabled": true}}}
+  {"mcp": {"playwright": {"type": "local", "command": ["npx", "@playwright/mcp@latest", "--extension"], "enabled": true}}}
   ```
 
-Merge the snippet into the existing file if it has other servers; don't replace it. Playwright MCP opens a visible browser by default, so the candidate can watch and take over for a CAPTCHA.
+Merge the snippet into the existing file if it has other servers; don't replace it. If a `playwright` entry already exists without `--extension`, add the flag: a separate Playwright profile has none of the candidate's logins.
+
+How it behaves:
+- The first time you use the browser in a session, the browser shows a page where the candidate approves the connection and picks the tab. Tell them to expect it.
+- You work only in the tabs of your own tab group. Leave their other tabs alone, and close the tabs you opened when you are done.
+- Claude Code's Chrome integration (`claude --chrome`) and Cowork's browser also drive the candidate's own browser. If one of those is what this agent has, use it instead.
 
 ## 5. Mail (optional)
 
