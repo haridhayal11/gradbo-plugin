@@ -10,7 +10,7 @@ Gradbo has two halves:
 - **The gradbo MCP server** finds roles and tracks them. It crawls UK employers' career pages, filters the adverts by the candidate's search preferences and keeps each role's status, fit score and notes. It holds nothing else about the candidate.
 - **The Gradbo folder** is one project folder on the candidate's computer, `~/Gradbo` unless they chose another. It holds everything personal: the CV, verified facts, reusable answers, and each application's documents and receipt. It also holds the skills and an `AGENTS.md` that tells any agent started there what the folder is. You keep it organised; the layout is in [references/folder-layout.md](references/folder-layout.md), so read it before writing any file.
 
-You apply in the candidate's own Chrome or Edge, through Playwright MCP's browser extension or the agent's own Chrome integration, so their logins and saved passwords are there.
+You apply with this agent's own browser tools, in the candidate's own browser wherever the agent supports it (Claude Code's Chrome integration, for example), so their logins and saved passwords are there. Playwright's browser extension is the fallback for agents without one.
 
 ## Pick the task
 

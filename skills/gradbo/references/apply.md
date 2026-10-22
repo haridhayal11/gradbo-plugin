@@ -24,7 +24,7 @@ Create `applications/YYYY-MM-DD_employer_role/` ([folder-layout.md](folder-layou
 
 ## 4. The form
 
-Work through the application in the browser, page by page. Keep `application-notes.md` up to date as you go: each field's label as shown, what you entered, where the value came from, and any open question. If the session ends, this is how you or the candidate resume.
+Work through the application in the candidate's browser, page by page, with this agent's own browser tools ([install.md](install.md), step 4). Read the page's structure (fields, labels, options) before acting rather than guessing from a screenshot, act on one field at a time, and read the page again after each change, since forms often reveal new fields. Keep `application-notes.md` up to date as you go: each field's label as shown, what you entered, where the value came from, and any open question. If the session ends, this is how you or the candidate resume.
 
 - **Accounts:** you are in the candidate's own browser, so they may already be signed in, or their password manager may offer a saved login.
   - **Signing in:** if the browser autofills the login, sign in. If it doesn't, ask the candidate to sign in in that tab, then carry on.
@@ -32,7 +32,7 @@ Work through the application in the browser, page by page. Keep `application-not
   - Never read out, type, copy or record a password.
   - For a verification email or code, follow [email.md](email.md). Don't store the code.
 - **Fields:** fill each from [questions.md](questions.md). Identity and contact fields come straight from the facts.
-- **Uploads:** upload files by their path in the application folder (for example Playwright MCP's `browser_file_upload` with the absolute path). If this browser tool cannot set a file input, ask the candidate to choose the file, telling them its exact path, then carry on.
+- **Uploads:** attach files by their absolute path in the application folder, using your browser tool's file-upload action. If it has none, or the upload is refused, ask the candidate to choose the file in the page's file dialog, telling them its exact path, then carry on.
 - **Consents and declarations:** follow [consents.md](consents.md).
 - **Controls you can't operate** (custom widgets that ignore input, embedded assessments): write `manual-handoff.md` from [templates/manual-handoff.md](../templates/manual-handoff.md) and hand over.
 - **CAPTCHA or anti-bot block:** stop, write `manual-handoff.md`, and ask the candidate to complete that step in the same tab (it is their browser). Resume once they say it is done.

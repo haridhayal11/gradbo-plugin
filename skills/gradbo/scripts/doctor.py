@@ -140,8 +140,8 @@ def check(mail: bool) -> list[dict]:
     add("Node 18+ (for Playwright MCP, the usual browser tool, and `npx skills`)", major >= 18, "recommended",
         node_version or "not found", "node")
     browser = chromium_browser()
-    add("Chrome or Edge (the agent applies in your browser through the Playwright Extension)", bool(browser), "recommended",
-        browser or "not found", fix="install Google Chrome or Microsoft Edge, then the Playwright Extension (references/install.md step 4)")
+    add("Chrome or Edge (the agent applies in your own browser)", bool(browser), "recommended",
+        browser or "not found", fix="install Google Chrome or Microsoft Edge, then your agent's browser extension (references/install.md step 4)")
     tectonic = shutil.which("tectonic")
     add("Tectonic (only for LaTeX CVs)", bool(tectonic), "optional", version([tectonic, "--version"]) if tectonic else "not found", "tectonic")
     office = shutil.which("soffice") or shutil.which("libreoffice")
