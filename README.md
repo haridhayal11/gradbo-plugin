@@ -32,7 +32,7 @@ The plugin brings both the skill and the connection.
 npx skills add haridhayal11/gradbo-plugin
 ```
 
-This needs Node 22.20 or later. [skills](https://github.com/vercel-labs/skills) detects your agents (Codex, Gemini CLI, Cursor, GitHub Copilot, OpenCode and many more) and copies `skills/gradbo` into each. To do it by hand instead, copy `skills/gradbo` into `~/.agents/skills/gradbo`, which Codex, Gemini CLI, Cursor, Copilot and OpenCode all read.
+This needs Node 22.20 or later. Tested with Codex; OpenCode 1.19.3 connected to Gradbo but didn't list skills from a project's `.agents/skills`, so install globally there (`npx skills add haridhayal11/gradbo-plugin -g`). [skills](https://github.com/vercel-labs/skills) detects your agents (Codex, Gemini CLI, Cursor, GitHub Copilot, OpenCode and many more) and copies `skills/gradbo` into each. To do it by hand instead, copy `skills/gradbo` into `~/.agents/skills/gradbo`, which Codex, Gemini CLI, Cursor, Copilot and OpenCode all read.
 
 ### Any other agent: the connection
 
