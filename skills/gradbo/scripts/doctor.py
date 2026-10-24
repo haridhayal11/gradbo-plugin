@@ -99,7 +99,7 @@ def gradbo_folder() -> tuple[bool, str]:
     agents = here / "AGENTS.md"
     if agents.is_file() and "Gradbo" in agents.read_text(encoding="utf-8", errors="ignore"):
         return True, str(here)
-    if (here / "profile" / "facts.md").is_file():
+    if (here / "profile" / "cv").is_dir() or (here / "profile" / "facts.md").is_file():
         return True, f"{here} (no AGENTS.md yet)"
     if any((here / d / "skills" / "gradbo" / "SKILL.md").is_file() for d in (".agents", ".claude", ".gemini", ".cursor", ".github", ".opencode")):
         return True, f"{here} (skills installed, no profile yet)"

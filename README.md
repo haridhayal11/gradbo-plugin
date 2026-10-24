@@ -2,6 +2,8 @@
 
 Find UK early-careers roles with [Gradbo](https://gradbo.com) and apply with your own agent. Supported agents: Claude Code, Codex and Gemini CLI.
 
+Gradbo remembers what you tell your agent (your facts, answers and applications, encrypted), so it never asks you the same thing twice, on any agent or computer. Your CV and documents stay in your Gradbo folder. **Settings › Your data** in the dashboard downloads or deletes what Gradbo keeps.
+
 The **Connect your agent** step in the Gradbo dashboard shows these same steps with your token filled in, and tells you when your agent has connected.
 
 ## 1. Get a token

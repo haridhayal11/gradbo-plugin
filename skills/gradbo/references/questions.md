@@ -1,63 +1,57 @@
 # Answering form questions
 
-Decide each field with the cheapest source that settles it, in this order. Note the source of every value in `application-notes.md`; the receipt needs it.
+Gradbo answers the questions; you read the page, fill it in, and fill the gaps with the candidate.
 
-## 1. Facts the field asks for directly
+## 1. Send the whole page
 
-Name, email, phone, address, links, education and experience entries: take them from `profile/facts.md`. Format to the field (a phone field with a separate country code, a month picker, a dropdown of universities), but don't change the substance.
+Read the page's structure, then call `answer_questions(job_id=..., questions=[...])` with every question on it at once:
 
-## 2. Questions you have seen before
+```json
+[{"id": "q1", "label": "Will you now or in the future require visa sponsorship?", "options": ["Yes", "No"], "type": "yes_no", "section": "Eligibility"},
+ {"id": "q2", "label": "How did you hear about this role?", "options": ["Referral", "Company website", "Other"]},
+ {"id": "q3", "label": "Why do you want to join Graphcore?", "type": "long_text", "help": "Max 250 words"}]
+```
 
-Match the question to a canonical key in [question-keys.md](question-keys.md) by meaning, not by exact words; the known wordings there show the range. Then use, in order:
+`id` is your own reference to the field. Give the label as shown, the visible options for choice fields (not "Select one"), the page section, and any hint text. Identity and contact fields (name, email, phone, address, links, education and experience entries) go in the same call; each has its fact key.
 
-1. `answers/employers/<slug>.md` for this employer (and any `job:<id>` block for this role)
-2. `answers/<key>.md`
-3. the fact with that key in `profile/facts.md`
+## 2. Act on each answer's status
 
-A dropdown or radio group: choose the option that says the same thing as the stored answer.
+| Status | Do |
+|---|---|
+| `answered` | Fill `option` for a choice field, otherwise `value`. Format to the field (a phone field with a separate country code, a month picker) without changing the substance. |
+| `confirm` | A likely reading Gradbo hasn't settled (a yes/no question matched by similarity, or a high-stakes key). Check that the question asks what `key` means and that Yes reads the same way; then fill it and `remember_question(wording, key, polarity, confirmed=True)`. If it doesn't fit, treat it as `uncertain_match`. |
+| `missing_fact` | Gradbo has no fact for it. Ask the candidate `question` (see "Asking", below). |
+| `uncertain_match` | The wording might ask for one of `candidates`. Decide which, by meaning and time frame (now, at the start date, or ever). Then answer from that fact and `remember_question(wording, key, polarity)`. If you can't tell, ask the candidate, quoting the question. |
+| `unknown_question` | Gradbo doesn't know this question. Choose the fact key it asks for: one of the usual keys (`get_profile` shows what is held), or a new lowercase dotted key (`custom.non_compete_agreement`). Then `remember_question` and answer, or ask if the candidate's answer isn't held. |
+| `unmatched_option` | The stored `value` isn't among the options. Show the candidate the options and ask which one; save their choice with `save_answer(key, question, answer, scope="employer:<slug>")` if it only fits this employer. |
+| `reuse` | A free-text question with stored `answers` close to it. Adapt the nearest to this employer and role (an employer-specific question always needs this employer's specifics), then `save_answer`. |
+| `draft` | A free-text question with nothing stored. Draft it from verified evidence (the facts, the CV, the advert), within the limit, with real examples only. Run it through the `humanizer` skill, fill it, then `save_answer(..., status="draft", origin="assisted", uses_facts=[...])`, with `scope="employer:<slug>"` when it only fits this employer. If it needs an example the evidence doesn't have, ask the candidate for one rather than writing around the gap. |
 
-## 3. Statements of fact
+Record every value with its `source` in the application's progress (`save_application(job_id, progress=...)`); the receipt needs it.
 
-Right to work, sponsorship, criminal convictions, age as a condition ("Are you over 18?"), disability when it asks about adjustments, relatives at the company, previous employment there, and every key marked `stakes: high` are statements of fact. Equal-opportunities monitoring questions are not; they follow the next section.
+## 3. Asking
 
-- Answer only from a `verified` fact whose time frame matches. "Do you **currently** have the right to work" is about today; "will you have it **at the start date**" is about `preferences.available_from`; "now **or in the future**" covers both. A fact with a passed `valid until` is stale; don't use it.
-- Read the polarity. "Will you require sponsorship?" with a candidate who needs it is **Yes**; "Are you eligible to work without sponsorship?" is then **No**. Read the question twice before choosing.
-- If no fact fits, ask the candidate (see "Outcomes" below).
+Work through the whole page or form first, then ask everything at once, so the candidate answers once (`ask_candidate` lists the missing facts). Save each answer with `save_fact(key, value, source="candidate", source_ref="told the agent on <date>")` as soon as the candidate gives it, before you carry on. The next form finds it and never asks again.
+
+Keep the outcomes apart; each needs a different question:
+- **Missing:** "What is your notice period?"
+- **Uncertain match:** whether a fact applies, quoting the employer's question.
+- **Unmatched option:** the options, and which one says their answer.
+
+Never ask for a fact Gradbo already answered.
+
+## Statements of fact
+
+Right to work, sponsorship, criminal convictions, age as a condition ("Are you over 18?"), disability when it asks about adjustments, relatives at the company, and previous employment there are statements of fact. Answer them only from a verified fact whose time frame fits, and read the polarity: "Will you require sponsorship?" with a candidate who needs it is **Yes**, while "Are you eligible to work without sponsorship?" is then **No**. `answer_questions` reads UK work-rights wording by code; when it can't settle one, it says so. Then read the question twice, and ask the candidate if it is still unclear.
 
 ## Equal-opportunities and diversity questions
 
-Gender, ethnicity, sexual orientation, religion, disability monitoring, age range, background and the like (`demographics.*`) follow the candidate's standing choice, `demographics.choice` in `profile/facts.md`:
+Gender, ethnicity, sexual orientation, religion, disability monitoring, age range, background and the like follow two things:
+- the candidate's standing choice, the `demographics.choice` fact (`answer from facts` or `prefer not to say`);
+- their consent in Settings > Your data. Without consent, Gradbo keeps none of these answers and the form gets "Prefer not to say".
 
-- `answer from facts`: answer each from its `demographics.*` fact; where none is recorded, choose "Prefer not to say".
-- `prefer not to say`: choose "Prefer not to say" (or "I don't wish to answer", the nearest option) for every one.
+`answer_questions` applies both, so fill what it returns and never ask about these during an application. If it notes that `demographics.choice` is missing, ask the candidate once after the application how they want these answered, and save the choice. If they want them answered, tell them to allow it in Settings > Your data; then save each answer they give with `save_fact`.
 
-Never ask the candidate about these during an application. If `demographics.choice` is missing, choose "Prefer not to say" for each, and ask the choice once after the application, recording it for next time. A disability question that asks about adjustments for the process rather than monitoring is a statement of fact (section 3).
+## Low-stakes administrative questions
 
-## 4. Low-stakes administrative questions
-
-Answer these with sensible defaults without asking, and list them separately in the receipt as defaults:
-
-- **How did you hear about us / source:** the employer's careers website if offered; otherwise a neutral online option ("Job board", "Online", "Other"). Never invent a referral or a named person.
-- **Preferred contact method or language:** email; English.
-- **Where would you like to work** (when the advert's location is fixed): the advert's location.
-
-## 5. Free-text questions
-
-Motivation, competency and "tell us about a time" questions:
-
-1. Check `answers/` for one you can reuse or adapt; an employer-specific question ("Why us?") always needs this employer's specifics.
-2. Otherwise draft one from verified evidence: the facts, the CV, and the advert for the employer and role. Use real examples only, with no invented situations, numbers or outcomes. Keep within the word or character limit.
-3. Run it through the `humanizer` skill.
-4. Save it to `answers/` as `status: draft, origin: assisted`, or in the employer file if it only fits this employer.
-
-If the question needs an example the evidence doesn't have, ask the candidate for one rather than writing around the gap.
-
-## Outcomes when you can't answer
-
-Keep these apart; each needs a different question to the candidate:
-
-- **Missing:** no fact covers it ("What is your notice period?"). Ask for the fact, write it to `facts.md` with its source as soon as the candidate answers (before you carry on), then answer. The next form finds it there and never asks again.
-- **Uncertain match:** a fact might cover it but the wording or time frame doesn't clearly fit. Ask whether the fact applies, quoting the question.
-- **Unmatched option:** the fact is known but no option clearly presents it (the options don't include the candidate's degree subject). Show the candidate the options and ask which one.
-
-Batch your questions: work through the whole page or form first, then ask everything at once, so the candidate answers once. Never ask again for a fact that is already verified.
+How they heard about the role, preferred contact method and language: `answer_questions` answers these with the standing defaults (the employer's careers website, or a neutral online option; email; English). Fill them without asking, and list them as defaults in the receipt. Never invent a referral or a named person. Where the advert's location is fixed, "Where would you like to work" is that location.

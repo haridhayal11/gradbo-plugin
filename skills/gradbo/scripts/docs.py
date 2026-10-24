@@ -16,8 +16,9 @@ Commands
   compare BASE TAILORED [--allow FILE]... [--allow-term TEXT]...
                               list numbers, names and terms in TAILORED that BASE never mentions,
                               and BASE lines that TAILORED dropped. Exits 1 when anything was added.
-                              Terms in an --allow file (profile/facts.md) and each --allow-term
-                              (the employer's name, the role title) count as known.
+                              Terms in an --allow file (- reads standard input: the candidate's
+                              facts) and each --allow-term (the employer's name, the role title)
+                              count as known.
   docx-dump FILE              print every paragraph (body and tables, in order) as JSON:
                               {"i", "style", "text", "where"}; the "i" numbers are what docx-edit uses
   docx-edit FILE EDITS OUT    apply a JSON list of edits (indices from docx-dump of FILE) and save OUT:
@@ -316,7 +317,8 @@ def main(argv: list[str]) -> int:
         if i + 1 >= len(args):
             fail(f"{args[i]} needs a value")
         flag, value = args[i], args[i + 1]
-        allowed.append(Path(value).read_text(encoding="utf-8") if flag == "--allow" else value)
+        allowed.append((sys.stdin.read() if value == "-" else Path(value).read_text(encoding="utf-8"))
+                       if flag == "--allow" else value)
         del args[i:i + 2]
     if command == "check" and len(args) == 1:
         path = Path(args[0]).resolve()

@@ -4,7 +4,7 @@ You read the candidate's email for two things: verification codes and links whil
 
 ## Which mail access to use
 
-Use the first that works, and remember the choice in `profile/facts.md` as `workspace.mail_access` (value `connector`, `imap` or `none`):
+Use the first that works, and remember the choice with `save_fact("workspace.mail_access", "connector" | "imap" | "none")`:
 
 1. **A mail tool in this agent**, such as a Gmail, Outlook or Microsoft 365 connector, or any MCP server that can search and read messages. Use its search with the sender's domain and a recent time window.
 2. **The IMAP script**, `<skill>/scripts/mail.py`, when the candidate has set `GRADBO_IMAP_USER` and `GRADBO_IMAP_PASSWORD` in their environment. This needs an app password, which Gmail supports; Outlook.com and Microsoft 365 don't, so their users need a connector. Run it with `python <skill>/scripts/mail.py ...`; it uses the standard library only and opens the inbox read-only.
@@ -25,7 +25,7 @@ During setup, ask once which they want. Never ask for or store their mail passwo
 
 Run this when the candidate asks "any news?", and as part of [organise.md](organise.md).
 
-1. Collect the roles with an application in flight: `list_jobs(status=...)` for `Submitted`, `Assessment completed` and `Interview`, with their employers and the domains from each `job.md` and receipt. Each call returns a page (`items`, `total`); if `total` is more than you got, call again with `offset`.
+1. Collect the roles with an application in flight: `list_jobs(status=...)` for `Submitted`, `Assessment completed` and `Interview`, with their employers, and the domains from each role's links (`get_job`, and the brief in `get_application`). Each call returns a page (`items`, `total`); if `total` is more than you got, call again with `offset`.
 2. Look at mail since the last check (the date is in `applications/mail-check.md`; 14 days on the first run):
    - connector: search mail from those employers' domains and from applicant tracking systems;
    - IMAP: `python <skill>/scripts/mail.py scan --days <n> --domains <employer domains, comma-separated>`.
@@ -40,7 +40,7 @@ Run this when the candidate asks "any news?", and as part of [organise.md](organ
 | An offer | `update_status(job_id, "Offer", reason="Offer email <date>")`, and tell the candidate at once |
 | "Under review", a newsletter, anything else | Nothing |
 
-4. Add one dated line per message under **Afterwards** in that role's `receipt.md`, such as "2026-11-02: rejection email", and the same entry to `afterwards` in its `receipt.json` when it has one. Copy no more of the message than that.
+4. The status change and its reason are the record ("Rejection email 2026-11-02"); copy no more of the message than that.
 5. Write today's date to `applications/mail-check.md`, then give the candidate the summary: offers first, then invitations with their deadlines, then rejections.
 
 Notes and reasons sent to Gradbo name the kind of message and the date only (SKILL.md rule 6).

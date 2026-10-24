@@ -18,7 +18,7 @@
 
 ## Still needed from the candidate
 
-- <facts the form asks for that are not in profile/facts.md>
+- <facts the form asks for that Gradbo doesn't hold>
 
 ## Resume checklist
 
