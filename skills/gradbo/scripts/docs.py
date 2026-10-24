@@ -13,8 +13,11 @@ Commands
                               Exits 1 when a check fails. A .docx is converted with LibreOffice
                               or Word when either is installed, so its pages can be rendered too.
   text FILE                   print the document's text (.tex is read from its compiled PDF)
-  compare BASE TAILORED       list numbers, names and terms in TAILORED that BASE never mentions,
+  compare BASE TAILORED [--allow FILE]... [--allow-term TEXT]...
+                              list numbers, names and terms in TAILORED that BASE never mentions,
                               and BASE lines that TAILORED dropped. Exits 1 when anything was added.
+                              Terms in an --allow file (profile/facts.md) and each --allow-term
+                              (the employer's name, the role title) count as known.
   docx-dump FILE              print every paragraph (body and tables, in order) as JSON:
                               {"i", "style", "text", "where"}; the "i" numbers are what docx-edit uses
   docx-edit FILE EDITS OUT    apply a JSON list of edits (indices from docx-dump of FILE) and save OUT:
@@ -274,9 +277,9 @@ def notable(token: str) -> bool:
     return bool(re.match(r"[£$€]?\d", token)) or token[0].isupper() or bool(re.search(r"[+#./\d]", token))
 
 
-def compare(base_path: Path, tailored_path: Path) -> int:
+def compare(base_path: Path, tailored_path: Path, allowed: list[str] | None = None) -> int:
     base, tailored = text_of(base_path), text_of(tailored_path)
-    known = {t.lower().strip(".,") for t in TOKEN.findall(base)}
+    known = {t.lower().strip(".,") for t in TOKEN.findall(" ".join([base, *(allowed or [])]))}
     added = sorted({t.strip(".,") for t in TOKEN.findall(tailored) if notable(t) and t.lower().strip(".,") not in known})
     norm = lambda line: re.sub(r"\W+", " ", line).strip().lower()
     tailored_lines = {norm(l) for l in tailored.splitlines()}
@@ -307,6 +310,14 @@ def main(argv: list[str]) -> int:
     command, args = argv[0], argv[1:]
     one_page = "--one-page" in args
     args = [a for a in args if a != "--one-page"]
+    allowed: list[str] = []
+    while any(a in ("--allow", "--allow-term") for a in args):
+        i = next(i for i, a in enumerate(args) if a in ("--allow", "--allow-term"))
+        if i + 1 >= len(args):
+            fail(f"{args[i]} needs a value")
+        flag, value = args[i], args[i + 1]
+        allowed.append(Path(value).read_text(encoding="utf-8") if flag == "--allow" else value)
+        del args[i:i + 2]
     if command == "check" and len(args) == 1:
         path = Path(args[0]).resolve()
         suffix = path.suffix.lower()
@@ -321,7 +332,7 @@ def main(argv: list[str]) -> int:
         print(text_of(Path(args[0]).resolve()))
         return 0
     if command == "compare" and len(args) == 2:
-        return compare(Path(args[0]).resolve(), Path(args[1]).resolve())
+        return compare(Path(args[0]).resolve(), Path(args[1]).resolve(), allowed)
     if command == "docx-dump" and len(args) == 1:
         docx_dump(Path(args[0]).resolve())
         return 0

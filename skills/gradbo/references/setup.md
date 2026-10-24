@@ -17,6 +17,7 @@ Everything lives in one folder ([folder-layout.md](folder-layout.md)).
   - Write `CLAUDE.md` with the single line `@AGENTS.md`.
   - Write `GEMINI.md` with the same text as `AGENTS.md`.
   - If any of these files already exists, add a "Gradbo job-search workspace" section instead of replacing it.
+  - **Already set up:** whenever you start in a Gradbo folder, compare its `AGENTS.md` (or its Gradbo section) with [templates/AGENTS.md](../templates/AGENTS.md). If the template has lines the folder's copy lacks, replace the Gradbo text with the template's and update `GEMINI.md` to match. Tell the candidate in one line; it doesn't need their approval.
 - **The CV they named lives elsewhere** (`~/Downloads/cv.pdf`): copy it in at step 2 and leave the original where it is.
 - If they have a Gradbo export from the retired hosted applier, it already holds `profile/`, `answers/` and past `applications/`. Copy it in, read `profile/facts.md`, and continue from step 3 to fill gaps; don't redo what is verified.
 
@@ -37,8 +38,9 @@ Read `main.txt` and write `profile/facts.md` in the format in [folder-layout.md]
   - `preferences.available_from` (month and year they can start)
   - `address.city`, `address.country`, and a full address only if they want forms filled with it
   - `preferences.notice_period` if they are working
+  - `motivation.target_areas` and `motivation.what_they_want`: the kinds of role they want and what they want from one, in their own words. Cover letters and "why this role" answers build on these; without them the letters can only say how the advert matches their record.
 - An education end date of "Present" is not a graduation date: ask for the expected graduation month.
-- Demographic and equal-opportunities answers (`demographics.*`) are optional. Ask once whether they want them answered or left as "Prefer not to say", and record whichever they choose.
+- Equal-opportunities answers: ask once whether they want them answered from their details or left as "Prefer not to say", and record it as `demographics.choice` (`answer from facts` or `prefer not to say`). If they choose to answer, take the `demographics.*` facts in the same batch. Forms never ask them again ([questions.md](questions.md)).
 - Never record passwords, codes, bank, passport or national insurance numbers.
 
 ## 4. Email
@@ -50,7 +52,7 @@ Ask how you may read their email for verification codes and employers' replies: 
 The server filters and keyword-scores adverts with these; they decide what reaches the digest.
 
 1. `get_preferences()` returns the current values and the list of role families.
-2. Propose values from the profile: up to six role families in the candidate's order of preference, seniority (`internship`, `graduate`, `junior`, …), `graduation_year` for graduate schemes, `available_from` (YYYY-MM), preferred locations, `needs_sponsorship`, keywords, and employers to favour or hide. Keep `exclude_clearance` true.
+2. Propose values from the profile: up to six role families in the candidate's order of preference, seniority (`internship`, `graduate`, `junior`, …), `graduation_year` for graduate schemes, `available_from` (YYYY-MM), preferred locations, keywords, and employers to favour or hide. Keep `exclude_clearance` true. Set `needs_sponsorship` from the `work.uk.requires_sponsorship` fact (true if they need sponsorship now or in future), never from the default; with it false, adverts that refuse sponsorship are kept.
 3. Show the proposal and save it with `set_preferences` once the candidate agrees. Only send fields they confirmed; these are search settings, not personal facts.
 
 ## 6. First roles

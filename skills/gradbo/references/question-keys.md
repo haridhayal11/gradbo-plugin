@@ -270,6 +270,36 @@ How should employers contact you?
   - Preferred method of contact
   - How would you like us to contact you?
 
+## `motivation.target_areas`
+
+Which kinds of role and field does the candidate want, in their own words?
+
+- input: text; when: neither
+- A fact the candidate gives once (setup); cover letters and "why this role" answers build on it.
+
+## `motivation.what_they_want`
+
+What does the candidate want from their first role, in their own words (the work, learning, the kind of team)?
+
+- input: text; when: neither
+
+## `motivation.why_employer`
+
+Why do you want to work for us?
+
+- input: text; scope: employer
+- Known wordings:
+  - Why do you want to work for us?
+  - Why do you want to join <employer>?
+  - What attracts you to <employer>?
+
+## `demographics.choice`
+
+How should equal-opportunities and diversity questions be answered?
+
+- input: text; when: neither
+- One standing choice the candidate makes once: `answer from facts` (use the `demographics.*` facts, and "Prefer not to say" where a fact is missing) or `prefer not to say` (choose "Prefer not to say", or the nearest option, for every one). With this fact recorded, demographic questions never need a question to the candidate.
+
 ## `demographics.sexual_orientation`
 
 What is your sexual orientation?

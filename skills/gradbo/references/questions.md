@@ -18,11 +18,20 @@ A dropdown or radio group: choose the option that says the same thing as the sto
 
 ## 3. Statements of fact
 
-Right to work, sponsorship, criminal convictions, age, disability, relatives at the company, previous employment there, and every key marked `stakes: high` are statements of fact.
+Right to work, sponsorship, criminal convictions, age as a condition ("Are you over 18?"), disability when it asks about adjustments, relatives at the company, previous employment there, and every key marked `stakes: high` are statements of fact. Equal-opportunities monitoring questions are not; they follow the next section.
 
 - Answer only from a `verified` fact whose time frame matches. "Do you **currently** have the right to work" is about today; "will you have it **at the start date**" is about `preferences.available_from`; "now **or in the future**" covers both. A fact with a passed `valid until` is stale; don't use it.
 - Read the polarity. "Will you require sponsorship?" with a candidate who needs it is **Yes**; "Are you eligible to work without sponsorship?" is then **No**. Read the question twice before choosing.
 - If no fact fits, ask the candidate (see "Outcomes" below).
+
+## Equal-opportunities and diversity questions
+
+Gender, ethnicity, sexual orientation, religion, disability monitoring, age range, background and the like (`demographics.*`) follow the candidate's standing choice, `demographics.choice` in `profile/facts.md`:
+
+- `answer from facts`: answer each from its `demographics.*` fact; where none is recorded, choose "Prefer not to say".
+- `prefer not to say`: choose "Prefer not to say" (or "I don't wish to answer", the nearest option) for every one.
+
+Never ask the candidate about these during an application. If `demographics.choice` is missing, choose "Prefer not to say" for each, and ask the choice once after the application, recording it for next time. A disability question that asks about adjustments for the process rather than monitoring is a statement of fact (section 3).
 
 ## 4. Low-stakes administrative questions
 
@@ -47,7 +56,7 @@ If the question needs an example the evidence doesn't have, ask the candidate fo
 
 Keep these apart; each needs a different question to the candidate:
 
-- **Missing:** no fact covers it ("What is your notice period?"). Ask for the fact, record it in `facts.md` with its source, then answer.
+- **Missing:** no fact covers it ("What is your notice period?"). Ask for the fact, write it to `facts.md` with its source as soon as the candidate answers (before you carry on), then answer. The next form finds it there and never asks again.
 - **Uncertain match:** a fact might cover it but the wording or time frame doesn't clearly fit. Ask whether the fact applies, quoting the question.
 - **Unmatched option:** the fact is known but no option clearly presents it (the options don't include the candidate's degree subject). Show the candidate the options and ask which one.
 

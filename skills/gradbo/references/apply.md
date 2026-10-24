@@ -1,10 +1,22 @@
 # Apply to a role
 
-When the candidate asks you to apply, prepare everything and submit; they don't need to review the package first unless they ask to. If they ask you only to *prepare*, stop before the final submit and tell them what is ready.
+When the candidate asks you to apply, prepare everything and submit; they don't need to review the package first unless they ask to. Don't stop to wait for a final review or approval (SKILL.md rule 10). If they ask you only to *prepare*, stop before the final submit and tell them what is ready.
+
+## 0. Choose the roles (when they don't name one)
+
+"Apply to my jobs", "apply to the shortlist": pick the roles yourself, and never one they have already applied to.
+
+1. Take the candidates from `list_jobs(status="Shortlisted", state="open")` and `list_jobs(status="Materials prepared", state="open")`, best fit first.
+2. Read every `job.md` and `receipt.md` under `applications/`, at any depth (older workspaces may have `applications/<employer>/<role>/`). Skip a role when:
+   - a folder's `job.md` has its Gradbo job id;
+   - a folder or receipt is for the same employer and the same role title (the same advert can be listed twice under different ids);
+   - `search_jobs("<role title>")` shows the same employer and title already at Submitted or later.
+3. Apply to one role per employer at a time. If the employer already has an application in progress or submitted this cycle, skip its other roles unless the candidate named them, since some employers allow only one application.
+4. Tell the candidate in one line which roles you will apply to and which you skipped and why, then work through them one at a time, each from step 1. This is a note, not a question; carry on unless they stop you.
 
 ## 1. Check the role
 
-1. `get_job(job_id)` (or `add_job_by_url` first for a role Gradbo doesn't have). Stop if the role is already applied to or finished (Submitted, Assessment completed, Interview, Offer, Rejected, Withdrawn or Closed), or the closing date has passed. If it was shortlisted a while ago, `get_job_snapshots(job_id)` shows whether the advert has changed since.
+1. `get_job(job_id)` (or `add_job_by_url` first for a role Gradbo doesn't have). Stop if the role is already applied to or finished (Submitted, Assessment completed, Interview, Offer, Rejected, Withdrawn or Closed), or the closing date has passed. Stop too if step 0's checks find an application for the same employer and role title under another id or folder. If it was shortlisted a while ago, `get_job_snapshots(job_id)` shows whether the advert has changed since.
 2. Open the official advert on the employer's own site (`apply_url` or `canonical_url`) and confirm it is live. If it has gone, `update_status(job_id, "Closed", reason="Advert no longer live on <date>")` and tell the candidate.
 3. Check eligibility yourself against the advert and `profile/facts.md`:
    - Clearance or vetting required: don't apply (SKILL.md rule 9).
@@ -14,12 +26,12 @@ When the candidate asks you to apply, prepare everything and submit; they don't 
 
 ## 2. The folder
 
-Create `applications/YYYY-MM-DD_employer_role/` ([folder-layout.md](folder-layout.md)) and write `job.md` from [templates/job.md](../templates/job.md). Then call `set_application_dir(job_id, "applications/<folder>")`.
+Create `applications/YYYY-MM-DD_employer_role/`, one folder at the top of `applications/`, never `applications/<employer>/<role>/` ([folder-layout.md](folder-layout.md)) and write `job.md` from [templates/job.md](../templates/job.md). Then call `set_application_dir(job_id, "applications/<folder>")`.
 
 ## 3. Documents
 
-- **CV:** tailor a copy of the candidate's CV for the advert, as [documents.md](documents.md) describes for LaTeX, Word or PDF-only CVs. You may reorder, and reword a point toward the advert's terms only where the candidate's own wording already supports it; add nothing the CV and facts don't contain. `docs.py check` and `docs.py compare` must both pass.
-- **Cover letter:** write one when the form asks for one or offers an upload for one ([documents.md](documents.md), "Cover letters"). Use one A4 page and the advert's own requirements. Every claim must come from the facts or CV. Run it through the `humanizer` skill, then check it.
+- **CV:** tailor a copy of the candidate's CV for the advert, as [documents.md](documents.md) describes for LaTeX, Word or PDF-only CVs. Rewrite the profile or summary section for this role, then reorder, and reword a point toward the advert's terms only where the candidate's own wording already supports it; add nothing the CV and facts don't contain. `docs.py check` and `docs.py compare` must both pass.
+- **Cover letter:** write one when the form asks for one or offers an upload for one ([documents.md](documents.md), "Cover letters"). Use one A4 page. Open with why this role, from the advert's specifics, then meet its main requirements with evidence. Every claim must come from the facts or CV. Run it through the `humanizer` skill, then check it.
 - Once the documents pass, `update_status(job_id, "Materials prepared")` (from Shortlisted or Researching; skip it if the transition is refused).
 
 ## 4. The form
@@ -32,18 +44,19 @@ Work through the application in the candidate's browser, page by page, with this
   - Never read out, type, copy or record a password.
   - For a verification email or code, follow [email.md](email.md). Don't store the code.
 - **Fields:** fill each from [questions.md](questions.md). Identity and contact fields come straight from the facts.
+- **Facts the candidate gives you:** when you ask for a missing fact (a demographic answer, notice period, a reason for wanting the role), write it to `profile/facts.md` as soon as they answer, before you carry on with the form, with source `candidate: told the agent on <date>`. The next form must find it there.
 - **Uploads:** attach files by their absolute path in the application folder, using your browser tool's file-upload action. If it has none, or the upload is refused, ask the candidate to choose the file in the page's file dialog, telling them its exact path, then carry on.
 - **Consents and declarations:** follow [consents.md](consents.md).
 - **Controls you can't operate** (custom widgets that ignore input, embedded assessments): write `manual-handoff.md` from [templates/manual-handoff.md](../templates/manual-handoff.md) and hand over.
 - **CAPTCHA or anti-bot block:** stop, write `manual-handoff.md`, and ask the candidate to complete that step in the same tab (it is their browser). Resume once they say it is done.
 
-Before the final submit, go back over every page: all required fields are filled, every statement of fact matches a verified fact, and the uploaded files are the checked ones.
+Before the final submit, go back over every page yourself: all required fields are filled, every statement of fact matches a verified fact, and the uploaded files are the checked ones. Then submit; this check is yours, not a review for the candidate.
 
 ## 5. Submit and record
 
 1. Submit once. Wait for the employer's confirmation page or message and capture its text, any reference number and the URL.
 2. If you can't tell whether it went through (an error after submitting, a timeout, a blank page), don't submit again. Check the employer's candidate portal, or ask the candidate to check their email. Retry only when it is clear nothing was received.
 3. Write `receipt.md` from [templates/receipt.md](../templates/receipt.md), with every submitted answer exactly as entered, and `receipt.json` from [templates/receipt.json](../templates/receipt.json) with the same content as data. Use `null` for anything unknown and keep `"schema"` as it is.
-4. `record_submission(job_id, application_dir="applications/<folder>", confirmation="<reference or the confirmation's first line>")`. Keep the confirmation impersonal (SKILL.md rule 6).
+4. `record_submission(job_id, application_dir="applications/<folder>", confirmation="<reference or the confirmation's first line>")`. Keep the confirmation impersonal (SKILL.md rule 6). Check that the role it returns has status `Submitted`; if the call failed, fix the cause and call it again before moving on, or the role will be offered again.
 5. File any new reusable answers under `answers/` ([organise.md](organise.md)).
 6. Tell the candidate it is done: role, employer, confirmation and folder.
