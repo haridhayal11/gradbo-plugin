@@ -21,7 +21,7 @@ When the candidate asks you to apply, prepare everything and submit; they don't 
 3. Check eligibility yourself against the advert and the candidate's facts (`get_profile`):
    - Clearance or vetting required: don't apply (SKILL.md rule 9).
    - Sponsorship: if the candidate needs it and the advert refuses it, don't apply. If the advert says nothing, apply and record that sponsorship support is unconfirmed.
-   - Degree, grade, start date, location or driving licence requirements the candidate doesn't meet: tell them and ask whether to continue.
+   - Degree, grade, start date, location or driving licence requirements the candidate clearly doesn't meet: don't apply; `update_status(job_id, "Excluded", reason="Requirement not met: <which>")` and tell them in one line. Where their facts don't settle it (no grade stated, a start date that might fit), apply and record the unknown in the brief.
 4. Find the employer's guidance on AI use in applications, if any (advert, application page, FAQ). It does not change how you work (SKILL.md rule 4), but it belongs in the record.
 
 ## 2. The folder and the brief
@@ -46,11 +46,13 @@ save_application(job_id, application_dir="applications/<folder>", brief={
 
 Work through the application in the candidate's browser, page by page, with this agent's own browser tools ([install.md](install.md), step 4). Read the page's structure (fields, labels, options) before acting rather than guessing from a screenshot, and answer the page with `answer_questions` ([questions.md](questions.md)). Act on one field at a time, and read the page again after each change, since forms often reveal new fields; send new ones to `answer_questions` too. After each page, save the progress: `save_application(job_id, progress={"page": ..., "fields": [{"label", "entered", "source", "open_question"}], "stopped_at": ...})`. If the session ends, this is how you, another agent or the candidate resume (`get_application`).
 
-- **Accounts:** you are in the candidate's own browser, so they may already be signed in, or their password manager may offer a saved login.
-  - **Signing in:** if the browser autofills the login, sign in. If it doesn't, ask the candidate to sign in in that tab, then carry on.
-  - **A new employer account:** fill in everything but the password with facts (the email from the facts). Then ask the candidate to click the password field and accept their browser's suggested strong password (or type their own), so it is saved in their password manager.
-  - Never read out, type, copy or record a password.
-  - For a verification email or code, follow [email.md](email.md). Don't store the code.
+- **Accounts:** many portals (Workday, SuccessFactors, Taleo, SmartRecruiters) need an account. Gradbo keeps track of them; the candidate's browser password manager keeps the passwords.
+  1. **Look it up:** `find_account(portal_url=<the portal page>)`. One account serves every role on the same portal.
+  2. **Signing in** (an account exists, or the candidate is already signed in): use the sign-in name it gives. If the browser autofills the password, sign in; if not, ask the candidate to sign in in that tab, then carry on. Then `record_account(portal_url, status="active", used=True)`.
+  3. **Creating one** (none exists): fill in everything but the password from `answer_questions` (the email, the name). Ask the candidate to click the password field and accept the browser's suggested strong password (or type their own), so their password manager saves it; it is usually one click. Submit the registration, then at once `record_account(portal_url, status="pending_verification", username=<the sign-in email>, job_id=job_id)`.
+  4. **Confirming it:** most portals send a code or a confirmation link. Get it as [email.md](email.md) describes (`find_verification_codes(from_domain=<the sender's mail domain, such as myworkday.com>)` when the inbox is connected, then without the filter if nothing comes), type the code or open the link in the candidate's browser, then `record_account(portal_url, status="active")`.
+  5. **Locked out or a forgotten password:** use the portal's reset link; the reset email comes the same way. Have the candidate accept the new suggested password, then carry on. `record_account(..., status="locked")` if it stays locked.
+  - Never read out, type, copy or record a password, in a tool call, a file or anywhere else; `record_account` refuses anything that looks like one. Don't store a code or link.
 - **Fields:** fill each from `answer_questions` ([questions.md](questions.md)), identity and contact fields included.
 - **Facts the candidate gives you:** when you ask for a missing fact, `save_fact` it as soon as they answer, before you carry on with the form, with `source="candidate"` and `source_ref="told the agent on <date>"`. The next form finds it and never asks again.
 - **Uploads:** attach files by their absolute path in the application folder, using your browser tool's file-upload action. If it has none, or the upload is refused, ask the candidate to choose the file in the page's file dialog, telling them its exact path, then carry on.

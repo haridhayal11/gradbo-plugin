@@ -34,7 +34,7 @@ On Windows use `py` or `python`, whichever exists. If neither Python nor uv is i
 
 The same for every format:
 
-- Rewrite the profile, summary or "about" section for this role. Lead with what the advert asks for most, and the candidate's evidence for it: the degree, projects and experience that match, in the advert's terms where their own wording supports them. It may name the role and the employer. It claims nothing the rest of the CV and `profile/facts.md` don't already say. A CV without such a section doesn't gain one.
+- Rewrite the profile, summary or "about" section for this role. Lead with what the advert asks for most, and the candidate's evidence for it: the degree, projects and experience that match, in the advert's terms where their own wording supports them. It may name the role and the employer. It claims nothing the rest of the CV and the candidate's facts (`get_profile`) don't already say. A CV without such a section doesn't gain one.
 - Reorder sections, entries and bullet points so the advert's priorities come first. Experience stays in date order.
 - Reword a point toward the advert's terms only where the candidate's own wording already supports it ("built test benches in SystemVerilog" may become "built SystemVerilog verification test benches"; it may not gain "UVM" unless the CV says UVM elsewhere).
 - Add nothing that isn't in the CV or the candidate's facts (`get_profile`): no skills, tools, numbers, employers, grades or outcomes.

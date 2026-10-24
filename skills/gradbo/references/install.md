@@ -23,9 +23,9 @@ Run `python <skill>/scripts/doctor.py` (`py` on Windows if `python` isn't found)
 | Node 18+ | The Playwright fallback browser, and `npx skills` | Only needed if the agent has no browser of its own |
 | Tectonic | LaTeX CVs only | Their compiled PDF is sent unchanged |
 | LibreOffice or Word | Seeing Word CVs' pages | Word CVs are checked by text only |
-| IMAP variables | Reading mail without a connector | Codes are read out by the candidate |
+| Inbox connected in Gradbo, or a mail connector | Verification codes, confirmation links and replies | Codes are read out by the candidate |
 
-If Python itself is missing, `doctor.py` can't run. Ask the candidate to install uv (it brings Python), using the commands in step 2 of the plugin README or https://docs.astral.sh/uv/.
+If Python itself is missing, `doctor.py` can't run. Ask the candidate to install uv (it brings Python) from https://docs.astral.sh/uv/ (one command on each system there).
 
 ## 3. Humanizer skill (required)
 
@@ -68,7 +68,7 @@ Apply with this agent's own browser tools, in the candidate's own browser wherev
 
 ## 5. Mail (optional)
 
-See [email.md](email.md), "Which mail access to use". Check your tools for a mail connector first (Gmail, Outlook, Microsoft 365). Without one, the IMAP route needs an app password; `doctor.py --mail` tests the login once the variables are set.
+See [email.md](email.md), "Which mail access to use". `mail_status()` first: when the candidate has connected their inbox in Gradbo, mail works from any agent. Otherwise check your tools for a mail connector (Gmail, Outlook, Microsoft 365), and suggest connecting the inbox in Settings > Your data. The IMAP script needs an app password in the environment; `doctor.py --mail` tests that login.
 
 ## Report
 
@@ -80,7 +80,7 @@ Humanizer skill      ok
 Browser              missing: install Claude in Chrome and start me with `claude --chrome`
 Documents (Python)   ok
 LaTeX (Tectonic)     not needed: your CV is a Word file
-Mail                 Gmail connector found
+Mail                 inbox connected in Gradbo
 ```
 
 Then continue with setup. A missing optional item never blocks it.

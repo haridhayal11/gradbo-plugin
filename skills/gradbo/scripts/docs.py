@@ -100,7 +100,7 @@ def pdf_text(pdf: Path) -> tuple[str, list]:
     return text.replace("\r\n", "\n"), pages
 
 
-def check_pdf(pdf: Path, name: str, out_dir: Path, one_page: bool) -> int:
+def check_pdf(pdf: Path, name: str, out_dir: Path, one_page: bool, show_hash: bool = True) -> int:
     text, pages = pdf_text(pdf)
     (out_dir / f"{name}.txt").write_text(text, encoding="utf-8")
     render = out_dir / "render"
@@ -120,7 +120,8 @@ def check_pdf(pdf: Path, name: str, out_dir: Path, one_page: bool) -> int:
     print(f"extracted words: {words}")
     print(f"text: {out_dir / (name + '.txt')}")
     print("render: " + " ".join(images))
-    print(f"sha256: {hashlib.sha256(pdf.read_bytes()).hexdigest()}")
+    if show_hash:
+        print(f"sha256: {hashlib.sha256(pdf.read_bytes()).hexdigest()}")
     status = 0
     if words < 30:
         print("FAIL: almost no text extracted; an applicant tracking system would read nothing", file=sys.stderr)
@@ -164,7 +165,10 @@ def docx_text(path: Path) -> str:
 def check_docx(path: Path, one_page: bool) -> int:
     pdf = docx_to_pdf(path)
     if pdf:
-        return check_pdf(pdf, path.stem, path.parent, one_page)
+        status = check_pdf(pdf, path.stem, path.parent, one_page, show_hash=False)
+        # The receipt records the file that is uploaded, not the PDF made to render it.
+        print(f"sha256: {hashlib.sha256(path.read_bytes()).hexdigest()}  ({path.name}, the file to upload)")
+        return status
     text = docx_text(path)
     (path.parent / f"{path.stem}.txt").write_text(text, encoding="utf-8")
     words = len(text.split())

@@ -45,7 +45,7 @@ Read `main.txt`, `get_profile()` for what Gradbo already holds, and save each ne
 
 ## 4. Email
 
-Ask how you may read their email for verification codes and employers' replies: a mail connector in this agent, the IMAP script with an app password they set in their environment, or not at all (they read codes out). Save it as the fact `workspace.mail_access`. See [email.md](email.md).
+Check `mail_status()`. If their inbox isn't connected, suggest they connect it in Settings > Your data in the dashboard (an app password for Gmail, iCloud or Yahoo; you can't do it for them, and never ask for the password): then codes, confirmation links and replies work from any agent. If they'd rather not, or use Outlook or Microsoft 365, use a mail connector in this agent, or the IMAP script with an app password in their environment, or have them read codes out. See [email.md](email.md).
 
 ## 5. Search preferences
 
@@ -59,9 +59,18 @@ The server filters and keyword-scores adverts with these; they decide what reach
 
 Before 2026-10-24 the skill kept facts and answers in the folder. When a folder still has `profile/facts.md`, `answers/` or receipts:
 
-1. Read them and call `import_workspace(facts_md=<profile/facts.md as it is>, answers=[{"path": "answers/...md", "text": ...} for every answer file, employer files included], receipts=[{"path": ..., "json": <receipt.json>, "job_id": <its Gradbo job id>} for each application folder with a receipt.json])`.
-2. Check the result: `stored` counts, and `skipped`. Equal-opportunities answers are skipped until the candidate allows Gradbo to keep them (Settings > Your data); import again afterwards. Fix or ask about anything else skipped.
-3. Move `profile/facts.md` and `answers/` into `profile/imported-YYYY-MM-DD/` (don't delete them), and tell the candidate in one line that Gradbo now remembers these and they may delete the copy. Leave old application folders as they are.
+1. Check the Gradbo connection first (install.md, step 1).
+2. Gather the receipts. For each folder under `applications/` with a `receipt.json` or `receipt.md`:
+   - its Gradbo job id: `gradbo_job_id` inside `receipt.json` (then leave `job_id` out), else the `Gradbo job id:` line of its `job.md`, else `export_tracker()`'s application-folder column or `search_jobs(<role title>)`;
+   - send `{"path": ..., "json": <receipt.json's content>}`, or `{"path": ..., "text": <receipt.md>, "job_id": ...}` when there is only a `receipt.md`. Leave out a folder whose role you can't find, and say so.
+3. Call `import_workspace(facts_md=<profile/facts.md as it is>, answers=[{"path": "answers/...md", "text": ...} for every answer file, employer files included], receipts=[...])`.
+4. Check the result:
+   - `stored`: the counts.
+   - `kept`: what Gradbo held already and kept, as the master copy: a fact whose value there was checked at least as recently as the folder's, and any answer it already had under the same key and scope. Mention them in one line.
+   - `skipped`: equal-opportunities answers wait for the candidate to allow Gradbo to keep them (Settings > Your data); after they do, call `import_workspace` again with the copy in `profile/imported-YYYY-MM-DD/facts.md` (nothing newer is overwritten). Fix or ask about anything else skipped.
+5. Move `profile/facts.md` and `answers/` into `profile/imported-YYYY-MM-DD/` (don't delete them), and tell the candidate in one line that Gradbo now remembers these and they may delete the copy. Leave old application folders as they are.
+
+A candidate with more than one older folder (a laptop and a desktop, say) moves each in the same way, from that computer; for facts Gradbo keeps whichever value was checked most recently, and answers it already holds stay as they are.
 
 ## 6. First roles
 

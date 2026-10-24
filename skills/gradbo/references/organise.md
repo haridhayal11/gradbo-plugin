@@ -18,7 +18,7 @@ When the candidate tells you they applied on their own:
 
 1. Find the role (`search_jobs`, `list_jobs`), or add it with `add_job_by_url`.
 2. `save_application(job_id, brief={...})` with what `get_job` returns and the advert's links.
-3. `record_submission(job_id, application_dir="applications/<folder or 'none'>", confirmation="<reference>", receipt={"schema": "gradbo-receipt/1", "submitted_by": "candidate", "submitted_at": "<date>", "confirmation": {...}, "documents": [<what they say they sent>], "answers": [], "notes": ["Submitted by the candidate; answers not seen"]})`. Leave out what you don't know (`null`, empty lists) rather than guessing.
+3. `record_submission(job_id, application_dir="applications/<YYYY-MM-DD_employer_role>", confirmation="<reference>", receipt={"schema": "gradbo-receipt/1", "submitted_by": "candidate", "submitted_at": "<date>", "confirmation": {...}, "documents": [<what they say they sent>], "answers": [], "notes": ["Submitted by the candidate; answers not seen"]})`. Leave out what you don't know (`null`, empty lists) rather than guessing. Create that folder, empty, if they sent nothing from this workspace, so the record points somewhere real.
 
 ## Applications from an earlier setup
 
@@ -41,7 +41,7 @@ Check the candidate's email for employers' replies ([email.md](email.md), "Repli
 ## Tracker
 
 1. `list_jobs(status="Submitted", limit=200)`, and the same for `Assessment completed`, `Interview`, `Offer`, `Rejected` and `Withdrawn`. Each call returns a page (`items`, `total`); if `total` is more than you got, call again with `offset`.
-2. A role you submitted whose `get_application(job_id)` has no receipt: the submission wasn't recorded fully; add the receipt with `record_submission` (it changes nothing else when repeated).
+2. A role you submitted whose `get_application(job_id)` has no receipt: the submission wasn't recorded fully. Add the receipt with `record_submission` while the role is Submitted, Assessment completed or Interview (repeating it changes nothing else), or with `save_application(job_id, receipt={...})` once it has moved to Offer, Rejected or Withdrawn.
 3. A Submitted role with no receipt and an application folder starting `imported/`, or a history (`get_job_history`) showing it was set by `import`: an application from an earlier setup; leave it. Any other Submitted role without a receipt: tell the candidate; it was applied to elsewhere.
 4. Outcomes the candidate reports or email shows (an assessment invite, a rejection, an offer): handle them as in the table in [email.md](email.md).
 

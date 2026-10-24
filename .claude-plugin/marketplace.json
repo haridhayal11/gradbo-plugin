@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "gradbo",
-      "description": "Find early-careers roles with Gradbo and apply with your own agent, keeping your profile and receipts local.",
+      "description": "Find early-careers roles with Gradbo and apply with your own agent; Gradbo remembers your answers so you are never asked twice.",
       "source": "./",
       "category": "productivity"
     },

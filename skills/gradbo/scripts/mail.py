@@ -72,12 +72,46 @@ def codes_in(body: str) -> list[str]:
     return found
 
 
-def links_in(body: str) -> list[str]:
-    return [l for l in dict.fromkeys(LINK.findall(body)) if ACTION_LINK.search(l) and not IGNORED_LINK.search(l)][:3]
+ACTION_TEXT = re.compile(r"confirm|verif|activat|validate|complete (?:your )?registration|set (?:up )?(?:your )?password|"
+                         r"click here to (?:confirm|verify|activate)|get started", re.I)
+ANCHOR = re.compile(r"<a\b[^>]*?href\s*=\s*([\"'])(https://[^\"']+)\1[^>]*>(.*?)</a>", re.I | re.S)
+
+
+def links_in(body: str, html: str = "") -> list[str]:
+    """Confirmation and verification links, best first: buttons in the HTML
+    whose words say confirm or verify (often behind a tracking address),
+    then addresses that say so themselves, then plain-text links right after
+    such words. Footer links (unsubscribe, privacy) are left out."""
+    found: list[str] = []
+    for _, url, text in ANCHOR.findall(html or ""):
+        words = unescape(re.sub(r"<[^>]+>", " ", text))
+        url = unescape(url)
+        if (ACTION_TEXT.search(words) or ACTION_LINK.search(url)) and not IGNORED_LINK.search(url):
+            found.append(url)
+    found += [l for l in LINK.findall(body) if ACTION_LINK.search(l) and not IGNORED_LINK.search(l)]
+    for match in ACTION_TEXT.finditer(body):
+        after = LINK.search(body[match.end():match.end() + 160])
+        if after and not IGNORED_LINK.search(after.group()):
+            found.append(after.group())
+    return [l.rstrip(".,;") for l in dict.fromkeys(found)][:3]
+
+
+def html_of(message) -> str:
+    return "\n".join(_decode(part.get_payload(decode=True) or b"", part.get_content_charset())
+                     for part in message.walk() if part.get_content_type() == "text/html" and not part.get_filename())
 
 
 def domain(address: str) -> str:
     return parseaddr(address)[1].rsplit("@", 1)[-1].lower()
+
+
+def _decode(payload: bytes, charset: str | None) -> str:
+    """A part's text, whatever charset it claims: an unknown one (unknown-8bit,
+    a misspelling) falls back to UTF-8 rather than failing the whole read."""
+    try:
+        return payload.decode(charset or "utf-8", errors="replace")
+    except LookupError:
+        return payload.decode("utf-8", errors="replace")
 
 
 def text_of(message) -> str:
@@ -86,8 +120,7 @@ def text_of(message) -> str:
         kind = part.get_content_type()
         if kind not in ("text/plain", "text/html") or part.get_filename():
             continue
-        payload = part.get_payload(decode=True) or b""
-        text = payload.decode(part.get_content_charset() or "utf-8", errors="replace")
+        text = _decode(part.get_payload(decode=True) or b"", part.get_content_charset())
         (plain if kind == "text/plain" else html).append(text)
     if plain:
         return "\n".join(plain)
@@ -127,7 +160,10 @@ def is_recruiting(sender_domain: str, extra: tuple[str, ...]) -> bool:
 
 
 def header(message, name: str) -> str:
-    return str(make_header(decode_header(message[name] or "")))
+    try:
+        return str(make_header(decode_header(message[name] or "")))
+    except (LookupError, UnicodeError, ValueError):
+        return str(message[name] or "")  # a malformed encoded header: its raw text
 
 
 def main(argv: list[str]) -> int:
@@ -154,7 +190,7 @@ def main(argv: list[str]) -> int:
                 shown += 1
                 print(f"{when:%Y-%m-%d %H:%M} UTC  from {sender}  subject: {subject}")
                 print(f"  codes: {', '.join(codes_in(body)) or 'none found'}")
-                for link in links_in(body):
+                for link in links_in(body, html_of(message)):
                     print(f"  link: {link}")
             if not shown:
                 print("No verification mail yet. Wait a minute and run this again.")
