@@ -5,7 +5,8 @@ One folder holds the candidate's documents for their job search: `~/Gradbo` by d
 ```
 Gradbo/
   AGENTS.md                     what this folder is, for any agent started here (templates/AGENTS.md)
-  CLAUDE.md, GEMINI.md          the same, for Claude Code and Gemini CLI
+  AUTHORISATION.md              the candidate's standing authorisation, in their words with their name and date (templates/AUTHORISATION.md); never rewritten
+  CLAUDE.md, GEMINI.md          the same as AGENTS.md (CLAUDE.md imports AGENTS.md and AUTHORISATION.md), for Claude Code and Gemini CLI
   .agents/skills/ or .claude/   the gradbo and humanizer skills when installed for this folder only
   .mcp.json                     Claude Code's project-level tools (the browser), if added here
   profile/

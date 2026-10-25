@@ -14,10 +14,11 @@ Everything lives in one folder ([folder-layout.md](folder-layout.md)).
 - **Started somewhere else** (their home directory, a code project, Downloads): don't set up there. If `~/Gradbo` exists, ask them to restart you in it. Otherwise offer to create `~/Gradbo`, then ask them to restart you there (`cd ~/Gradbo`, then start the agent). Agents usually can't write outside the folder they were started in, and the skills and instructions installed for that folder only load there.
 - **Mark the folder:**
   - Write `AGENTS.md` from [templates/AGENTS.md](../templates/AGENTS.md).
-  - Write `CLAUDE.md` with the single line `@AGENTS.md`.
+  - Write `CLAUDE.md` with two lines, `@AGENTS.md` and `@AUTHORISATION.md`.
   - Write `GEMINI.md` with the same text as `AGENTS.md`.
   - If any of these files already exists, add a "Gradbo job-search workspace" section instead of replacing it.
-  - **Already set up:** whenever you start in a Gradbo folder, compare its `AGENTS.md` (or its Gradbo section) with [templates/AGENTS.md](../templates/AGENTS.md). If the template has lines the folder's copy lacks, replace the Gradbo text with the template's and update `GEMINI.md` to match. Tell the candidate in one line; it doesn't need their approval.
+  - **Already set up:** whenever you start in a Gradbo folder, compare its `AGENTS.md` (or its Gradbo section) with [templates/AGENTS.md](../templates/AGENTS.md). If the template has lines the folder's copy lacks, replace the Gradbo text with the template's and update `GEMINI.md` to match. Make sure `CLAUDE.md` has both lines. Tell the candidate in one line; it doesn't need their approval. Never rewrite `AUTHORISATION.md`: it is the candidate's.
+- **The standing authorisation** ("Standing authorisation", below): if the folder has no `AUTHORISATION.md`, set it up now.
 - **The CV they named lives elsewhere** (`~/Downloads/cv.pdf`): copy it in at step 2 and leave the original where it is.
 - If they have an older Gradbo folder or an export from the retired hosted applier (it holds `profile/facts.md`, `answers/` and past `applications/`), copy it in and move it into Gradbo ("Moving an older folder in", below), then continue from step 3 to fill gaps; don't redo what is verified.
 
@@ -54,6 +55,20 @@ The server filters and keyword-scores adverts with these; they decide what reach
 1. `get_preferences()` returns the current values and the list of role families.
 2. Propose values from the profile: up to six role families in the candidate's order of preference, seniority (`internship`, `graduate`, `junior`, …), `graduation_year` for graduate schemes, `available_from` (YYYY-MM), preferred locations, keywords, and employers to favour or hide. Keep `exclude_clearance` true. Set `needs_sponsorship` from the `work.uk.requires_sponsorship` fact (true if they need sponsorship now or in future), never from the default; with it false, adverts that refuse sponsorship are kept.
 3. Show the proposal and save it with `set_preferences` once the candidate agrees. Only send fields they confirmed; these are search settings, not personal facts.
+
+## Standing authorisation
+
+Applying for the candidate means accepting the terms, the required consents and the "information is accurate" declaration on every form. Agents' safety checks (Claude Code's auto mode in particular) block that unless the candidate's authorisation names those exact actions, so record it once:
+
+1. Show the candidate the text of [templates/AUTHORISATION.md](../templates/AUTHORISATION.md) with their full name and today's date, and ask once: "May I accept these for you on every application, as written?" It is their authorisation to give; never assume it.
+2. On yes: write it to `AUTHORISATION.md` in the Gradbo folder exactly as shown, make sure `CLAUDE.md` has the line `@AUTHORISATION.md` (and `GEMINI.md` a line pointing to it), and `save_fact("authorization.standing", "granted <YYYY-MM-DD>", source="candidate", source_ref="told the agent on <date>")`. On no: leave it; you will ask them to tick these boxes themselves on each form.
+3. **Claude Code only**: auto mode also needs a rule in the candidate's own settings, since it ignores rules in project files. With their yes, add this entry to `autoMode.allow` in `~/.claude/settings.json`, keeping `"$defaults"` first in the list (create the list as `["$defaults", <entry>]` if there is none, and leave every other setting alone):
+
+   ```
+   Gradbo job applications: while applying with the gradbo skill in the candidate's own browser, ticking or accepting an employer's privacy policy, terms and conditions or applicant terms, a consent the application requires, the declaration that the information given is true, accurate and complete, and submitting the application, are allowed: the candidate granted standing authorisation in their Gradbo folder's AUTHORISATION.md. Not covered: optional or marketing consents, and statements that the application is their own unaided work or that no AI was used.
+   ```
+
+   If you can't write that file, give them the entry to paste into `/permissions` › Auto mode › Allow, or into the file themselves. `claude auto-mode config` shows it in effect. Each computer they apply from needs it once.
 
 ## Moving an older folder in
 

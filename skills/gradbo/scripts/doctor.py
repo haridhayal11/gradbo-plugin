@@ -122,6 +122,18 @@ def check(mail: bool) -> list[dict]:
 
     ok, where = gradbo_folder()
     add("Gradbo folder (start the agent here)", ok, "required", where, fix=None if ok else "see references/setup.md step 1")
+    authorised = (Path.cwd() / "AUTHORISATION.md").is_file()
+    add("standing authorisation (AUTHORISATION.md)", authorised, "recommended", "granted" if authorised else "not recorded",
+        fix="see references/setup.md, Standing authorisation")
+    claude_settings = Path.home() / ".claude" / "settings.json"
+    if claude_settings.parent.is_dir():
+        try:
+            allow = json.loads(claude_settings.read_text(encoding="utf-8")).get("autoMode", {}).get("allow", [])
+        except (OSError, ValueError):
+            allow = []
+        rule = any(isinstance(entry, str) and entry.startswith("Gradbo job applications") for entry in allow)
+        add("Claude Code auto mode rule", rule, "recommended", "in ~/.claude/settings.json" if rule else "not set on this computer",
+            fix="see references/setup.md, Standing authorisation, step 3")
     skill = humanizer_path()
     add("humanizer skill", bool(skill), "required", str(skill) if skill else "not found",
         fix="see references/install.md step 3 (Claude Code: claude plugin install humanizer@gradbo --scope project; "

@@ -66,6 +66,10 @@ Apply with this agent's own browser tools, in the candidate's own browser wherev
 - Expect the browser's own permission prompts (allowing a site, sharing a tab, approving the connection), and tell the candidate when one is coming.
 - If an upload fails, the candidate picks the file themselves ([apply.md](apply.md)).
 
+## Claude Code's auto mode
+
+In auto mode, Claude Code checks each action before running it and may refuse to tick an employer's terms "on the candidate's behalf". Setup's "Standing authorisation" step records the candidate's authorisation in `AUTHORISATION.md` and, with their yes, adds the matching `autoMode.allow` rule to `~/.claude/settings.json` on this computer. Report it in the checklist (`Auto mode rule  ok`, or `missing: setup will offer it`).
+
 ## 5. Mail (optional)
 
 See [email.md](email.md), "Which mail access to use". `mail_status()` first: when the candidate has connected their inbox in Gradbo, mail works from any agent. Otherwise check your tools for a mail connector (Gmail, Outlook, Microsoft 365), and suggest connecting the inbox in Settings > Your data. The IMAP script needs an app password in the environment; `doctor.py --mail` tests that login.
@@ -81,6 +85,7 @@ Browser              missing: install Claude in Chrome and start me with `claude
 Documents (Python)   ok
 LaTeX (Tectonic)     not needed: your CV is a Word file
 Mail                 inbox connected in Gradbo
+Auto mode rule       ok
 ```
 
 Then continue with setup. A missing optional item never blocks it.
