@@ -60,7 +60,7 @@ Work through the application in the candidate's browser, page by page, with this
 - **Controls you can't operate** (custom widgets that ignore input, embedded assessments): write `manual-handoff.md` from [templates/manual-handoff.md](../templates/manual-handoff.md) and hand over.
 - **CAPTCHA or anti-bot block:** stop, write `manual-handoff.md`, and ask the candidate to complete that step in the same tab (it is their browser). Resume once they say it is done.
 
-Before the final submit, go back over every page yourself: all required fields are filled, every statement of fact matches a verified fact, and the uploaded files are the checked ones. Then submit; this check is yours, not a review for the candidate.
+Before the final submit, go back over every page yourself: all required fields are filled, every statement of fact matches a verified fact, every piece of prose you wrote went through the humanizer, and the uploaded files are the checked ones. Then submit; this check is yours, not a review for the candidate.
 
 ## 5. Submit and record
 
@@ -72,8 +72,8 @@ Before the final submit, go back over every page yourself: all required fields a
    {"schema": "gradbo-receipt/1", "submitted_at": "<YYYY-MM-DDTHH:MM:SSZ>", "submitted_by": "agent",
     "official_advert": "<URL>", "application_form": "<URL>",
     "confirmation": {"text": "...", "reference": "<or null>", "url": "<or null>", "received_at": "<or null>"},
-    "documents": [{"file": "main.pdf", "sha256": "...", "notes": "<how it was tailored>"}],
-    "answers": [{"question": "<label as shown>", "answer": "<exactly as entered>", "source": "<fact:<key> | answer:<scope> | candidate (<date>) | drafted>"}],
+    "documents": [{"file": "main.pdf", "sha256": "...", "notes": "<how it was tailored>", "humanized": true}],
+    "answers": [{"question": "<label as shown>", "answer": "<exactly as entered>", "source": "<fact:<key> | answer:<scope> | candidate (<date>) | drafted>", "humanized": "<true for prose you wrote or adapted; omit for values>"}],
     "administrative_defaults": [{"question": "...", "answer": "..."}],
     "accepted_statements": [{"wording": "<exact text>", "accepted": "<ticked | signed as <name>>"}],
     "left_unticked": ["<optional consent or marketing wording>"],

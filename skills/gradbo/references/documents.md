@@ -39,13 +39,14 @@ The same for every format:
 - Reword a point toward the advert's terms only where the candidate's own wording already supports it ("built test benches in SystemVerilog" may become "built SystemVerilog verification test benches"; it may not gain "UVM" unless the CV says UVM elsewhere).
 - Add nothing that isn't in the CV or the candidate's facts (`get_profile`): no skills, tools, numbers, employers, grades or outcomes.
 - Cut only what is irrelevant to this role, never dates or employers.
-- Run the reworded text through the `humanizer` skill.
+- Run every sentence you wrote or changed through the `humanizer` skill before it goes into the file: the rewritten summary and each reworded bullet. Unchanged lines from the candidate's CV stay as they are.
 
 ### LaTeX
 
 1. Copy `profile/cv/main.tex` to `main.tex` in the application folder and edit the copy.
 2. `docs.py check main.tex`.
 3. `docs.py compare ../../profile/cv/main.tex main.tex --allow - --allow-term "<Employer>" --allow-term "<Role title>"`, with the employer and title from the brief, and the values of `get_profile()`'s facts written to its standard input (one per line), so a term traced to a fact counts as known. Nothing is written to a file.
+4. `docs.py tells main.tex --base ../../profile/cv/main.tex`: anything it flags in your new text goes back through the humanizer.
 
 Tectonic must be installed (https://tectonic-typesetting.github.io). Without it, use `profile/cv/main.pdf` unchanged.
 
@@ -64,10 +65,11 @@ Tectonic must be installed (https://tectonic-typesetting.github.io). Without it,
 3. `docs.py docx-edit ../../profile/cv/main.docx cv-edits.json <Name>_CV.docx`
 4. `docs.py check <Name>_CV.docx`. With LibreOffice or Word installed, the pages are rendered too; without them, say in the receipt that the layout was not checked by eye.
 5. `docs.py compare ../../profile/cv/main.docx <Name>_CV.docx --allow - --allow-term "<Employer>" --allow-term "<Role title>"`, with the facts' values on standard input as for LaTeX.
+6. `docs.py tells <Name>_CV.docx --base ../../profile/cv/main.docx`: anything it flags in your new text goes back through the humanizer.
 
 ## Cover letters
 
-Write the text first: the candidate's name, contact line, then 3-4 short paragraphs following [templates/cover-letter.tex](../templates/cover-letter.tex)'s outline. Every claim must come from the facts, the CV or the advert. Then run it through the `humanizer` skill.
+Write the text first: the candidate's name, contact line, then 3-4 short paragraphs following [templates/cover-letter.tex](../templates/cover-letter.tex)'s outline. Every claim must come from the facts, the CV or the advert. Then run the whole letter through the `humanizer` skill, every time, however short, and only then build it.
 
 The letter's job is to say why this role, at this employer:
 
@@ -75,8 +77,8 @@ The letter's job is to say why this role, at this employer:
 - Be specific to this advert: a sentence that would fit any employer's letter is cut or rewritten with the advert's own details.
 - Never invent a motivation, a visit, a conversation or a long-held interest. If there are no `motivation.*` facts, ask the candidate once what draws them to this kind of role and save the answer with `save_fact`; until then, base the "why" on how the advert's work matches what they have done.
 
-- **LaTeX candidates:** fill in `templates/cover-letter.tex` as `cover-letter.tex`, then `docs.py check --one-page cover-letter.tex`.
-- **Everyone else:** save the text as `cover-letter.txt`, then run `docs.py letter cover-letter.txt cover-letter.docx` and `docs.py check --one-page cover-letter.docx`.
+- **LaTeX candidates:** fill in `templates/cover-letter.tex` as `cover-letter.tex`, then `docs.py check --one-page cover-letter.tex` and `docs.py tells cover-letter.tex`.
+- **Everyone else:** save the text as `cover-letter.txt`, then run `docs.py letter cover-letter.txt cover-letter.docx`, `docs.py check --one-page cover-letter.docx` and `docs.py tells cover-letter.docx`.
 
 Upload the PDF when the form asks for PDF and you have one; otherwise the `.docx`.
 
@@ -88,6 +90,8 @@ Reject and fix a document when any of these fail:
 2. The extracted text reads correctly: names, dates and headings in order, no ligature characters (ﬀ ﬁ ﬂ), and no words split by stray spaces ("T eam").
 3. Every rendered page is clean: nothing clipped, overlapping or running off the page, and no empty trailing page.
 4. `compare` lists nothing added. Each added term must be removed, or traced to one of the candidate's facts (pass them with `--allow -`). Only the employer's name and the role title may come from the advert (`--allow-term`); never allow the advert's text as a whole. Whatever was dropped was meant to be.
+
+5. The humanizer pass ran on every sentence you wrote, and `tells` finds nothing in it (a flagged line goes back through the humanizer; `tells` is a check after the pass, never a replacement for it).
 
 `compare` catches new names, numbers and tool names, not new plain words ("led", "coverage"). Reread the reworded bullets against the base yourself.
 

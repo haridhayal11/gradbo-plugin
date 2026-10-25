@@ -1,6 +1,6 @@
 {
   "name": "gradbo",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Find early-careers roles with Gradbo and apply with your own browser agent. Gradbo remembers your facts, answers, applications and employer accounts (encrypted, never your passwords) so you are never asked twice; your CV and documents stay in your folder.",
   "author": {
     "name": "Gradbo"

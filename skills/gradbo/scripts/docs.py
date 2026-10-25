@@ -19,6 +19,11 @@ Commands
                               Terms in an --allow file (- reads standard input: the candidate's
                               facts) and each --allow-term (the employer's name, the role title)
                               count as known.
+  tells FILE [--base BASE]    flag what the humanizer pass removes: dashes used as punctuation, "not X
+                              but Y" contrasts, staged openers and stock AI words. With --base (the
+                              candidate's own CV), anything already in their own text is left alone.
+                              Exits 1 when anything is found; a check after the humanizer pass, not
+                              a replacement for it.
   docx-dump FILE              print every paragraph (body and tables, in order) as JSON:
                               {"i", "style", "text", "where"}; the "i" numbers are what docx-edit uses
   docx-edit FILE EDITS OUT    apply a JSON list of edits (indices from docx-dump of FILE) and save OUT:
@@ -305,6 +310,45 @@ def compare(base_path: Path, tailored_path: Path, allowed: list[str] | None = No
     return 1 if added else 0
 
 
+# -- a check after the humanizer pass ------------------------------------------
+
+TELL_WORDS = ("delve", "delves", "tapestry", "testament", "leverage", "leveraging", "seamless", "seamlessly", "robust",
+              "passionate", "thrilled", "synergy", "synergies", "utilize", "utilise", "foster", "fostering", "spearhead",
+              "spearheaded", "landscape", "realm", "pivotal", "showcase", "showcasing", "underscore", "underscores",
+              "embark", "unlock", "empower", "elevate", "holistic", "meticulous", "meticulously", "cutting-edge",
+              "game-changer", "ever-evolving", "fast-paced", "world-class", "dynamic", "innovative", "invaluable",
+              "intricate", "commendable", "resonate", "resonates", "align", "aligns", "endeavour", "endeavor")
+TELL_PATTERNS = (
+    ("dash used as punctuation", re.compile(r"\s[\u2014\u2013]\s|\w\u2014\w")),
+    ("not-X-but-Y contrast", re.compile(r"\bnot (?:just|only|merely|simply)\b[^.]{0,80}\b(?:but|also)\b", re.I)),
+    ("not-X, it's-Y contrast", re.compile(r"\b(?:isn't|is not|wasn't|was not)\b[^.]{0,60}[,;] (?:it's|it is|but)\b", re.I)),
+    ("staged opener", re.compile(r"(?:^|\. )(?:In today's|In an ever|As a (?:highly )?(?:motivated|passionate|driven)|"
+                                 r"I am writing to express|I am excited to|I am thrilled to|I am eager to)", re.I)),
+    ("stock closer", re.compile(r"\b(?:I am confident that|I look forward to the opportunity to|would be a great fit|"
+                                r"make a meaningful (?:impact|contribution))\b", re.I)),
+)
+
+
+def tells(path: Path, base: Path | None = None) -> int:
+    text = text_of(path)
+    own = text_of(base).lower() if base else ""
+    found = []
+    for number, line in enumerate(text.splitlines(), 1):
+        if own and line.strip() and line.strip().lower() in own:
+            continue  # the candidate's own line, unchanged
+        for word in re.findall(r"[A-Za-z][A-Za-z'-]+", line):
+            if word.lower() in TELL_WORDS and word.lower() not in own:
+                found.append((number, f"stock word '{word}'", line.strip()))
+        for name, pattern in TELL_PATTERNS:
+            if pattern.search(line):
+                found.append((number, name, line.strip()))
+    for number, name, line in found:
+        print(f"line {number}: {name}: {line[:120]}")
+    if not found:
+        print("No humanizer tells found.")
+    return 1 if found else 0
+
+
 def main(argv: list[str]) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -337,6 +381,8 @@ def main(argv: list[str]) -> int:
     if command == "text" and len(args) == 1:
         print(text_of(Path(args[0]).resolve()))
         return 0
+    if command == "tells" and len(args) in (1, 3) and (len(args) == 1 or args[1] == "--base"):
+        return tells(Path(args[0]).resolve(), Path(args[2]).resolve() if len(args) == 3 else None)
     if command == "compare" and len(args) == 2:
         return compare(Path(args[0]).resolve(), Path(args[1]).resolve(), allowed)
     if command == "docx-dump" and len(args) == 1:
